@@ -3,6 +3,6 @@
 
 Überlegungen:
 - "Map":
-	- Schule (komplett)
-	- Schule (verschiedene Szenarien)
+  - Schule (komplett)
+  - Schule (verschiedene Szenarien)
   - Stadt / Dorf (mit arbeitenden Menschen, Supermärkten, ...) 
