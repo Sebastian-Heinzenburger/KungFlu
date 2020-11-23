@@ -5,4 +5,4 @@
 - "Map":
   - Schule (komplett)
   - Schule (verschiedene Szenarien)
-  - Stadt / Dorf (mit arbeitenden Menschen, Supermärkten, ...) 
+  - Stadt / Dorf (mit arbeitenden Menschen, Supermärkten, ...) (von Fabian klauen)

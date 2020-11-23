@@ -4,4 +4,8 @@
 - Es sind zurzeit 320.000 Virenarten und rund 3.000 Virenstämme bekannt 
 - viren können sowohl Pilze, Pflanzen als auch Tiere befallen es sidn 1,8 Milionen 
 - bestehen aus einer Proteinhülle und einer Nukleinsäure die eine Wirtszelle zum Viren erschaffen lassen "umzuprogramieren"
-
+- es gibt verschiedene strukturen nachdenen ein Virus aufgebaut sein kann diese Form der Proteinausenhülle bestimmt den Virentyp 
+- viren haben unterschiedliche Proteine die ihnen unteerschiedliche Fähigkeiten verschaffen z.B. eindringen durch die Zellmembran, runterfahren des Immunsystems, etc.
+- entstehung nicht bekannt aber es wird vermutet das sie nicht vorfahren des einzeller wahren sondern sich später von einem Lebewesen abspielten und ab da allein bestanden
+- es gibt viren die sich auf einen Wirt anpassen und bei ihm ein lebenlang in den Zellen bleiben kann in dem er ihnen nicht zusehr oder nur unbemerkt schaden
+- es gibt einige Klassifikationen die mir im Moment zu kompliziert sind mach ich irgendwann anders :)
