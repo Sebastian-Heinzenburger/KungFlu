@@ -4,9 +4,46 @@ class Person {
     this.position = createVector(random(windowWidth), random(windowHeight));
     this.velocity = createVector(random(-1, 1), random(-1, 1)).normalize();
     this.state = HEALTH.HEALTHY;
+    this.virus = new Virus();
   }
 
   update(){
+    this.handleMovement();
+    this.handleOthers();
+    this.checkTime();
+  }
+
+  checkTime() {
+    if (this.state == HEALTH.INFECTIOUS) {
+      this.virus.tToDie--;
+      if (this.virus.tToDie == 0) {
+        this.state = HEALTH.DEAD;
+      }
+    }
+  }
+
+  handleOthers() {
+    if (this.state==HEALTH.INFECTIOUS) {
+      //cycle through every person...
+      people.forEach(person => {
+        //dont spontainiously self-infect
+        if (person === this) return;
+        //if in reach
+        if (dist(person.position.x, person.position.y, this.position.x, this.position.y) < 30) {
+          //and not dead
+          if (person.state != HEALTH.DEAD){
+            //then infect
+            person.state = HEALTH.INFECTIOUS;
+          }
+        }
+      });
+    }
+  }
+
+  handleMovement() {
+    //dont move if ya dead
+    if (this.state == HEALTH.DEAD) return;
+    
     let posToCheck = this.position.copy().add(this.velocity);
     
     //if outside X
@@ -22,23 +59,6 @@ class Person {
     //now update position
     this.position.add(this.velocity);
 
-    this.handleOthers();
-
-  }
-
-  handleOthers() {
-    if (this.state==HEALTH.INFECTIOUS) {
-      //cycle through every person...
-      people.forEach(person => {
-        //dont spontainiously self-infect
-        if (person === this) return;
-        //if in reach
-        if (dist(person.position.x, person.position.y, this.position.x, this.position.y) < 30) {
-            //then infect
-            person.state = HEALTH.INFECTIOUS;
-        }
-      });
-    }
   }
 
   isOutsideX(p) {
@@ -52,6 +72,8 @@ class Person {
   draw() {
     fill(this.getHealthColor());
     ellipse(this.position.x, this.position.y, 30, 30);
+    // fill(0);
+    // text(this.virus.tToDie, this.position.x, this.position.y);
   }
 
   //return color according to current health

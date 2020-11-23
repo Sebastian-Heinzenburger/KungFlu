@@ -5,3 +5,7 @@ const HEALTH = {
     DEAD: 4
 };
 Object.freeze(HEALTH);
+
+Config = {
+//TODO: Later    
+}
