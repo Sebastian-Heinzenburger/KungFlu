@@ -4,7 +4,7 @@ class Person {
     this.position = createVector(random(windowWidth), random(windowHeight));
     this.velocity = createVector(random(-1, 1), random(-1, 1)).normalize();
     this.state = HEALTH.HEALTHY;
-    this.virus = new Virus();
+    this.virus = null; 
   }
 
   update(){
@@ -34,6 +34,8 @@ class Person {
           if (person.state != HEALTH.DEAD){
             //then infect
             person.state = HEALTH.INFECTIOUS;
+            //add virus
+            person.virus = new Virus();
           }
         }
       });

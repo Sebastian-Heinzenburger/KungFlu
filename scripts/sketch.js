@@ -1,5 +1,4 @@
 let people = [];
-var speed = 1;
 
 function setup() {
     //create 15 Persons and store them in a people array
@@ -27,7 +26,7 @@ function draw() {
     //update and draw each person
     
     people.forEach(person => {
-        for (let i = 0; i < speed; i++) {
+        for (let i = 0; i < Config.speed; i++) {
             person.update();
         }
         person.draw();

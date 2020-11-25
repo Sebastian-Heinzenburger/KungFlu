@@ -6,6 +6,6 @@ const HEALTH = {
 };
 Object.freeze(HEALTH);
 
-Config = {
-//TODO: Later    
-}
+ const Config = {
+  speed:  3,
+ }
