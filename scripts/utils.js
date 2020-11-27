@@ -1,8 +1,9 @@
 const HEALTH = {
     HEALTHY: 1,
-    INFECTIOUS: 2,
-    IMMUNE: 3,
-    DEAD: 4
+    INFECTED: 2,
+    INFECTIOUS: 3,
+    IMMUNE: 4,
+    DEAD: 5
 };
 Object.freeze(HEALTH);
 
