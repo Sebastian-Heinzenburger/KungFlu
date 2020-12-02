@@ -10,12 +10,12 @@
 - es gibt viren die sich auf einen Wirt anpassen und bei ihm ein lebenlang in den Zellen bleiben kann in dem er ihnen nicht zusehr oder nur unbemerkt schaden
 - es gibt einige Klassifikationen die mir im Moment zu kompliziert sind mach ich irgendwann anders :)
 
-#Bakterien
+# Bakterien
 - grammpossitiv/-negativ unterscheidung durch färbung hilft bei Bestimmung wird durch Basischen Indikator erzeugt  
 - unterscheidet sie in ihrer Mureinhülle die bei Bkterien ein wictigen Bestandteil bildet und für die Bekämpfung essenziel ist
 - MRE wird bei grammnegativen Bakteerien durch sehr viele Enzyme erzeugt 
 
-#Sonstiges
+# Sonstiges
 - nosokominale-Infektion (KrankehausInfektion)
 - MRE-Keime (Multi-Resitente-Erreger) 
 - MRE wird meistens durch das Enzym beta-Lactamase
