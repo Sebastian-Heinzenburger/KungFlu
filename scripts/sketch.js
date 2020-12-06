@@ -22,6 +22,7 @@ function mousePressed(event) {
 }
 
 function draw() {
+    if (!focused) return;
     let startTime = new Date().getTime();
 
     background(36);

@@ -4,6 +4,7 @@ class Person {
     this.position = createVector(random(windowWidth), random(windowHeight));
     this.velocity = createVector(random(-1, 1), random(-1, 1)).normalize();
     this.state = HEALTH.HEALTHY;
+    this.localTimer = 0;
     this.virus = null; 
   }
 
@@ -14,12 +15,15 @@ class Person {
   }
 
   checkTime() {
+    
+    if (this.state == HEALTH.INFECTIOUS || this.state == HEALTH.INFECTED) {
+      this.localTimer++;
+    }
 
     //Check if gonna die
     if (this.state == HEALTH.INFECTIOUS || this.state == HEALTH.INFECTED) {
-      this.virus.tToDie--;
-      if (this.virus.tToDie == 0) {
-        if (random(1)<this.virus.mortalityRate) {
+      if (this.virus.tRekonvaleszenz + this.virus.tIncubation == this.localTimer) {
+        if (random(1)<this.virus.rLetalitaet) {
           this.state = HEALTH.DEAD;
         } else {
           this.state = HEALTH.IMMUNE;
@@ -29,8 +33,7 @@ class Person {
 
     //check if its time to start sneezing
     if (this.state == HEALTH.INFECTED) {
-      this.virus.tToInfectious--;
-      if (this.virus.tToInfectious == 0) {
+      if (this.localTimer == this.virus.tLatenz) {
         this.state = HEALTH.INFECTIOUS;
       }
     } 
@@ -77,6 +80,7 @@ class Person {
 
   infectWith(virus) {
     //infect self with given Virus
+    this.localTimer = 0;
     this.virus = virus;
     this.state = HEALTH.INFECTED;
   }
@@ -92,8 +96,9 @@ class Person {
   draw() {
     simulationGRaphics.fill(this.getHealthColor());
     simulationGRaphics.ellipse(this.position.x, this.position.y, 30, 30);
-    // fill(0);
-    // text(this.virus.tToDie, this.position.x, this.position.y);
+    simulationGRaphics.fill(255);
+    simulationGRaphics.text(this.state, this.position.x+30, this.position.y);
+    simulationGRaphics.text(this.localTimer, this.position.x+30, this.position.y+30);
   }
 
   //return color according to current health
@@ -104,9 +109,9 @@ class Person {
       case HEALTH.IMMUNE:
         return color(255, 255, 0);    //yellow?
       case HEALTH.INFECTED:
-        return color(0, 100, 0);      //dark green
+        return color(20, 100, 20);      //dark green
       case HEALTH.INFECTIOUS:
-        return color(0, 255, 0);    //yellow?
+        return color(0, 255, 0);    //green
       case HEALTH.DEAD:
         return color(10, 10, 10);     //black
     }
