@@ -4,3 +4,4 @@
 1. [ARD](https://www.planet-wissen.de/natur/mikroorganismen/viren/index.html)
 1. [SWPRS Data-Collection](https://swprs.org/studies-on-covid-19-lethality/)
 1. [Masks Are really efficent](https://youtu.be/Y47t9qLc9I4)
+1. [Masks work (Hamsterstudie)](https://academic.oup.com/cid/article/71/9/2428/5811871)
