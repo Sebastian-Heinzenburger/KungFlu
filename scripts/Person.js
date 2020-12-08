@@ -15,6 +15,23 @@ class Person {
     this.handleMovement();
     this.handleOthers();
     this.checkTime();
+    switch (this.state) {
+      case HEALTH.HEALTHY:
+          currentAnalData.HEALTHY++;
+        break;
+      case HEALTH.INFECTED:
+          currentAnalData.INFECTED++;
+        break;
+      case HEALTH.INFECTIOUS:
+          currentAnalData.INFECTIOUS++;
+        break;
+      case HEALTH.IMMUNE:
+          currentAnalData.IMMUNE++;
+        break;
+      case HEALTH.DEAD:
+          currentAnalData.DEAD++;
+        break;
+    }
   }
 
   checkTime() {
@@ -25,10 +42,10 @@ class Person {
     //Symptome?
     if (this.state == HEALTH.INFECTIOUS) {
 
-      let r = random(1)
       //für jedes Symptom
       if (!this.currentSymptom) {
         for (var symp in this.virus.symptoms) {
+          let r = random(1)
           if (r < this.virus.symptoms[symp]) {
             this.infectRadius = 60;
           }
@@ -125,7 +142,7 @@ class Person {
     //if not dead
     if (!(this.state == HEALTH.DEAD || this.state == HEALTH.IMMUNE)) {
       //draw infect radius
-      c.setAlpha(50);
+      c.setAlpha(90);
       simulationGRaphics.fill(c);
       simulationGRaphics.ellipse(this.position.x, this.position.y, this.infectRadius, this.infectRadius);
     }
