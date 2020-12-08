@@ -4,8 +4,11 @@ class Person {
     this.position = createVector(random(windowWidth), random(windowHeight));
     this.velocity = createVector(random(-1, 1), random(-1, 1)).normalize();
     this.state = HEALTH.HEALTHY;
+    this.size = 30;
     this.localTimer = 0;
-    this.virus = null; 
+    this.infectRadius = this.size+2;
+    this.currentSymptom = null;
+    this.virus = null;
   }
 
   update(){
@@ -15,19 +18,36 @@ class Person {
   }
 
   checkTime() {
-    
-    if (this.state == HEALTH.INFECTIOUS || this.state == HEALTH.INFECTED) {
-      this.localTimer++;
+
+    //wenn du nicht krank bist, lebe glücklich weiter
+    if (this.state != HEALTH.INFECTIOUS && this.state != HEALTH.INFECTED) return;
+
+    //Symptome?
+    if (this.state == HEALTH.INFECTIOUS) {
+
+      let r = random(1)
+      //für jedes Symptom
+      if (!this.currentSymptom) {
+        for (var symp in this.virus.symptoms) {
+          if (r < this.virus.symptoms[symp]) {
+            this.infectRadius = 60;
+          }
+        }
+      }
     }
 
+    //update Timer
+    this.localTimer++;
+
+    //update infectRadius
+    if (this.infectRadius > this.size+2) this.infectRadius-=0.5;
+
     //Check if gonna die
-    if (this.state == HEALTH.INFECTIOUS || this.state == HEALTH.INFECTED) {
-      if (this.virus.tRekonvaleszenz + this.virus.tIncubation == this.localTimer) {
-        if (random(1)<this.virus.rLetalitaet) {
-          this.state = HEALTH.DEAD;
-        } else {
-          this.state = HEALTH.IMMUNE;
-        }
+    if (this.virus.tRekonvaleszenz + this.virus.tIncubation == this.localTimer) {
+      if (random(1)<this.virus.rLetalitaet) {
+        this.state = HEALTH.DEAD;
+      } else {
+        this.state = HEALTH.IMMUNE;
       }
     }
 
@@ -36,7 +56,7 @@ class Person {
       if (this.localTimer == this.virus.tLatenz) {
         this.state = HEALTH.INFECTIOUS;
       }
-    } 
+    }
 
   }
 
@@ -60,9 +80,9 @@ class Person {
   handleMovement() {
     //dont move if ya dead
     if (this.state == HEALTH.DEAD) return;
-    
+
     let posToCheck = this.position.copy().add(this.velocity);
-    
+
     //if outside X
     if(this.isOutsideX(posToCheck)) {
       this.velocity.x = -this.velocity.x;
@@ -79,6 +99,7 @@ class Person {
   }
 
   infectWith(virus) {
+    if (this.state != HEALTH.HEALTHY) return;
     //infect self with given Virus
     this.localTimer = 0;
     this.virus = virus;
@@ -94,11 +115,25 @@ class Person {
   }
 
   draw() {
-    simulationGRaphics.fill(this.getHealthColor());
-    simulationGRaphics.ellipse(this.position.x, this.position.y, 30, 30);
-    simulationGRaphics.fill(255);
-    simulationGRaphics.text(this.state, this.position.x+30, this.position.y);
-    simulationGRaphics.text(this.localTimer, this.position.x+30, this.position.y+30);
+    //get color according to health
+    let c = this.getHealthColor();
+
+    //draw self
+    simulationGRaphics.fill(c);
+    simulationGRaphics.ellipse(this.position.x, this.position.y, 20, 20);
+
+    //if not dead
+    if (!(this.state == HEALTH.DEAD || this.state == HEALTH.IMMUNE)) {
+      //draw infect radius
+      c.setAlpha(50);
+      simulationGRaphics.fill(c);
+      simulationGRaphics.ellipse(this.position.x, this.position.y, this.infectRadius, this.infectRadius);
+    }
+
+    //debug text
+    // simulationGRaphics.fill(255);
+    // simulationGRaphics.text(this.state, this.position.x+20, this.position.y);
+    // simulationGRaphics.text(this.localTimer, this.position.x+20, this.position.y+20);
   }
 
   //return color according to current health

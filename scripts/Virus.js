@@ -5,6 +5,11 @@ class Virus {
     this.tRekonvaleszenz = 700;
     this.tIncubation = 500;
     this.tLatenz = 300;
+    this.symptoms = {
+      SNEEZING: 0.001,
+      COUGHING: 0.002,
+      SPONTAIOUS_EYE_BLEEDING: 0.001
+    };
   }
 
   //return mutated version of the Virus
@@ -15,6 +20,7 @@ class Virus {
       _v.tRekonvaleszenz = parseInt(5000 * random(0.5, 1,5), 10);
       _v.tIncubation = parseInt(500 * random(0.5, 1,5), 10);
       _v.tLatenz = parseInt(300 * random(0.5, 1,5), 10);
+      _v.symptoms = this.symptoms;
       return _v;
   }
 }

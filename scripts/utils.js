@@ -8,5 +8,5 @@ const HEALTH = {
 Object.freeze(HEALTH);
 
  const Config = {
-  speed:  3,
+  speed:  3
  }

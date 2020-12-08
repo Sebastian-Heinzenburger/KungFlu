@@ -22,20 +22,23 @@ function mousePressed(event) {
 }
 
 function draw() {
-    if (!focused) return;
+    // if (!focused) return;
     let startTime = new Date().getTime();
 
     background(36);
     simulationGRaphics.background(36);
 
-    //update and draw each person
-    
+    //update...
     for (let i = 0; i < Config.speed; i++) {
         people.forEach(person => {
                 person.update();
-                person.draw();
         });
     }
+
+    //...and draw each person
+    people.forEach(person => {
+      person.draw();
+    });
 
     image(simulationGRaphics, 0, 0);
     fill(255);
