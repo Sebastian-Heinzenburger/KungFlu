@@ -11,9 +11,9 @@
 - es gibt einige Klassifikationen die mir im Moment zu kompliziert sind mach ich irgendwann anders :)
 
 # Bakterien
-- grammpossitiv/-negativ unterscheidung durch färbung hilft bei Bestimmung wird durch Basischen Indikator erzeugt  
+- grammpossitiv/-negativ unterscheidung durch färbung hilft bei Bestimmung, wird durch Basischen Indikator erzeugt  
 - unterscheidet sie in ihrer Mureinhülle die bei Bkterien ein wictigen Bestandteil bildet und für die Bekämpfung essenziel ist
-- MRE wird bei grammnegativen Bakteerien durch sehr viele Enzyme erzeugt 
+- MRE wird bei grammnegativen Bakterien durch sehr viele Enzyme erzeugt 
 
 # Sonstiges
 - nosokominale-Infektion (KrankehausInfektion)
