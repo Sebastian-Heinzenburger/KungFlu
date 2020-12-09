@@ -34,7 +34,8 @@ function mousePressed(event) {
 }
 
 function keyPressed() {
-  if (key === 'A') {
+  console.log("pressed");
+  if (key === 'A' || key === 'a') {
     analiticalView = !analiticalView;
   }
   if (!(keyCode==123 || keyCode==116)) return false;
