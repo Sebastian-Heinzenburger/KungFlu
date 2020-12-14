@@ -25,6 +25,5 @@
 - Gyrasehemmer lassen Zelle platzen
 - 
 # Proteiiiiiine
-- Umgangs. Eiweiß/eiweißstoff
+- Umgangs. Eiweiß/Eiweißstoff
 - gibt es in jeder Zelle und übernahmen je nach struktur die unterschiedlichsten aufgaben
-- 
