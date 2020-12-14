@@ -9,6 +9,8 @@
 - entstehung nicht bekannt aber es wird vermutet das sie nicht vorfahren des einzeller wahren sondern sich später von einem Lebewesen abspielten und ab da allein bestanden
 - es gibt viren die sich auf einen Wirt anpassen und bei ihm ein lebenlang in den Zellen bleiben kann in dem er ihnen nicht zusehr oder nur unbemerkt schaden
 - es gibt einige Klassifikationen die mir im Moment zu kompliziert sind mach ich irgendwann anders :)
+- Virulenzfaktor ist eine Eigneschaft die die Krank machende wirkung eines Virus bestimmt das kann ein protein oder ein Ausscheidungsprodukt sein
+- ein möglicher virulenzfaktor wäre das m-Protein  
 
 # Bakterien
 - grammpossitiv/-negativ unterscheidung durch färbung hilft bei Bestimmung, wird durch Basischen Indikator erzeugt  
@@ -21,4 +23,8 @@
 - MRE wird meistens durch das Enzym beta-Lactamase
 - Gyrase Enzym ist zum komprehieren und lesbar machen der DNA zuständig
 - Gyrasehemmer lassen Zelle platzen
+- 
+# Proteiiiiiine
+- Umgangs. Eiweiß/eiweißstoff
+- gibt es in jeder Zelle und übernahmen je nach struktur die unterschiedlichsten aufgaben
 - 
