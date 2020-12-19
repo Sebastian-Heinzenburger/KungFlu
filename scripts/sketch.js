@@ -13,6 +13,11 @@ let currentAnalData = {
 let frame = 0;
 
 let simulationGRaphics;
+let bg;
+
+function preload() {
+  bg = loadImage('pictures/Klassenzimmer.png');
+}
 
 function setup() {
     //create 15 Persons and store them in a people array
@@ -61,7 +66,8 @@ function draw() {
 
     //if simulation
     if (!analiticalView) {
-      simulationGRaphics.background(36);
+      simulationGRaphics.image(bg, 0, 0, windowWidth, windowHeight);
+      // simulationGRaphics.background(36);
 
       //...and draw each person
       people.forEach(person => {
@@ -69,7 +75,7 @@ function draw() {
       });
 
       //clear canvas
-      background(36);
+      // background(36);
       image(simulationGRaphics, 0, 0);
 
       fill(255);

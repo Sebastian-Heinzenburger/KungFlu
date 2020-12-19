@@ -84,7 +84,7 @@ class Person {
         //dont spontainiously self-infect
         if (person === this) return;
         //if in reach
-        if (dist(person.position.x, person.position.y, this.position.x, this.position.y) < 30) {
+        if (dist(person.position.x, person.position.y, this.position.x, this.position.y) < this.infectRadius) {
           //and not dead
           if (person.state == HEALTH.HEALTHY){
             person.infectWith(this.virus.get());
