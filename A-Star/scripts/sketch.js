@@ -2,10 +2,11 @@ var nodeSize;
 var nodes = [];
 let path = false;
 let d;
+let bg;
 
 function setup() {
   doFull = false;
-  nodeSize = Math.floor(windowWidth/50);
+  nodeSize = Math.floor(windowWidth/30);
 
   let n;
   for (var x = 0; x < windowWidth/nodeSize; x++) {
