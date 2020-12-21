@@ -76,6 +76,11 @@ function getPath(_ns) {
   openlist = [];
   closedList = [];
 
+  _ns.forEach(_n => {
+    _n.g = Number.MAX_SAFE_INTEGER*0.99;
+    delete _n.daddy;
+  });
+
 
   if (!startNode || !endNode) return false;
 
