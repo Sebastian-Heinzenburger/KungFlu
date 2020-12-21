@@ -77,9 +77,10 @@ function mouseDragged(event) {
       nodes[Math.floor(event.x/nodeSize)][Math.floor(event.y/nodeSize)].isGood = false;
       break;
     default:
-    console.log("changing start");
-      startNode = nodes[Math.floor(event.x/nodeSize)][Math.floor(event.y/nodeSize)];
-      startNode.g = 0;
+      if (nodes[Math.floor(event.x/nodeSize)][Math.floor(event.y/nodeSize)].isGood) {
+        startNode = nodes[Math.floor(event.x/nodeSize)][Math.floor(event.y/nodeSize)];
+        startNode.g = 0;
+      }
   }
   path = false;
 }
