@@ -9,6 +9,17 @@ class Person {
     this.infectRadius = this.size+2;
     this.currentSymptom = null;
     this.virus = null;
+    this.pathFinder = new AStar();
+
+    //create Nodes
+    this.pathFinder.nodes = [];
+    for (var x = 0; x < windowWidth/nodeSize; x++) {
+      this.pathFinder.nodes.push([]);
+      for (var y = 0; y < windowHeight/nodeSize; y++) {
+        this.pathFinder.nodes[x][y] = new Node(x, y);
+      }
+    }
+
   }
 
   update(){
@@ -98,24 +109,38 @@ class Person {
     //dont move if ya dead
     if (this.state == HEALTH.DEAD) return;
 
-    let posToCheck = this.position.copy().add(this.velocity);
+    this.pathFinder.startNode = this.pathFinder.nodes[Math.floor(this.position.x/nodeSize)][Math.floor(this.position.y/nodeSize)];
+    this.pathFinder.endNode = this.pathFinder.nodes[Math.floor(mouseX/nodeSize)][Math.floor(mouseY/nodeSize)];
+    // this.pathFinder.endNode = this.pathFinder.nodes[Math.floor(random(windowWidth)/nodeSize)][Math.floor(random(windowHeight)/nodeSize)];
 
-    //if outside X
-    if(this.isOutsideX(posToCheck)) {
-      this.velocity.x = -this.velocity.x;
+    if (neq(this.pathFinder.position, { x: Math.floor(this.position.x/nodeSize), y: Math.floor(this.position.y/nodeSize) }) || neq(this.pathFinder.lEndNode, this.pathFinder.endNode)) {
+
+      this.pathFinder.lEndNode = this.pathFinder.endNode;
+      this.pathFinder.position =  {
+        x: Math.floor(this.position.x/nodeSize),
+        y: Math.floor(this.position.y/nodeSize)
+      };
+
+      if (this.pathFinder.getPath(this.pathFinder.nodes)) {
+        let n = this.pathFinder.endNode;
+        this.pathFinder.nextN = this.pathFinder.endNode;
+        while (n.daddy!=null && n.daddy!=this.pathFinder.startNode) {
+          this.pathFinder.nextN = n;
+          n = n.daddy;
+        }
+      } else {
+        this.pathFinder.nextN = this.pathFinder.startNode;
+      }
     }
-
-    //if outside Y
-    if(this.isOutsideY(posToCheck)) {
-      this.velocity.y = -this.velocity.y;
+    if (this.pathFinder.startNode != this.pathFinder.endNode) {
+      this.velocity = createVector(this.pathFinder.nextN.x+0.5 - this.position.x/nodeSize, this.pathFinder.nextN.y+0.5 - this.position.y/nodeSize).normalize();
+      this.position.add(this.velocity);
     }
-
-    //now update position
-    this.position.add(this.velocity);
 
   }
 
   infectWith(virus) {
+    //if healty
     if (this.state != HEALTH.HEALTHY) return;
     //infect self with given Virus
     this.localTimer = 0;

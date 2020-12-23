@@ -10,3 +10,14 @@ Object.freeze(HEALTH);
  const Config = {
   speed:  3
  }
+
+ function neq(o, t) {
+   if (!o || !t) return true;
+    if (o.x != t.x) {
+        return true;
+    }
+    if (o.y != t.y) {
+        return true;
+    }
+    return false;
+ }

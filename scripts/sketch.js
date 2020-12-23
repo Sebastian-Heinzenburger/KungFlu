@@ -15,13 +15,16 @@ let frame = 0;
 let simulationGRaphics;
 let bg;
 
+var nodeSize;
+
 function preload() {
   bg = loadImage('pictures/Klassenzimmer.png');
 }
 
 function setup() {
+    nodeSize = windowWidth/30;
     //create 15 Persons and store them in a people array
-    for (let i = 0; i < 40; i++) { people.push(new Person()); }
+    for (let i = 0; i < 24; i++) { people.push(new Person()); }
     createCanvas(windowWidth, windowHeight);
     simulationGRaphics = createGraphics(windowWidth, windowHeight);
 }
@@ -80,6 +83,7 @@ function draw() {
 
       fill(255);
       text(`${((((new Date().getTime()) - startTime))).toFixed()} ms per frame`, 5, 15);
+      text(`${people.length} people\n${Math.floor(windowWidth/nodeSize)}x${Math.floor(windowHeight/nodeSize)} path nodes`, 5, 35);
     }
 
     //if analiticalView

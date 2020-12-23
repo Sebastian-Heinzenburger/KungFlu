@@ -62,6 +62,7 @@ function draw() {
 
 function mousePressed(event) {
   mouseDragged(event);
+  return false;
 }
 
 function mouseDragged(event) {
@@ -83,4 +84,5 @@ function mouseDragged(event) {
       }
   }
   path = false;
+  return false;
 }
