@@ -7,6 +7,14 @@ const HEALTH = {
 };
 Object.freeze(HEALTH);
 
+const VIEWS = {
+    SIMULATION: 1,
+    BARS: 2,
+    CIRCLE: 3,
+    FANCY: 4
+};
+Object.freeze(VIEWS);
+
  const Config = {
   speed:  3
  }
