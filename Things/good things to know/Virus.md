@@ -29,18 +29,18 @@
 - Kommt aus dem Griechischen; proteius (grundlegend)
 - sie bestehen aus aminosäuren und Petidbindungen die zusammen ketten bilden die auch Petide genannt werden
 - Aminosäuren und Petidbindungen nennt man Protinogene
-- Die Ketten können bis zu 1000 Aminosäuren umfassen wobei man erst ab über hundert anneinander hämgenden Aminosäuren nicht mehr von Petiden sondern Proteinen spricht
+- Die Ketten können bis zu 1000 Aminosäuren umfassen wobei man erst ab über hundert anneinander hängenden Aminosäuren nicht mehr von Petiden sondern Proteinen spricht
 - Der Mensch besitzt 21 verschiedene Amninosäuren von denen 8 essenziel sind dh. sie können nicht vom Körper selbst hergestellt werden sonder müssen aufgenommen werden
 - Proteingrössen werden in Kilo-Dalton gemessen (kDa) (Dalton ist der 12 teil des Kohlenstoff-Isotops 12 C) falls du das so wie ich es geschrieben habe nicht versehest https://de.wikipedia.org/wiki/Atomare_Masseneinheit ist eigentlich eher als reminder gedacht ;) )
 - Petide die aus 2 Aminosäuren bestehen nennt man dipetid, aus 3 Tripetide, usw.
 - Der aufbau eines Proteiens wird in 4 Betrachtungsebenen beschrieben :
-   Primäre-Struktur:
+  Primäre-Struktur:
     - beschreibt die abfloge der Aminosäuren in einer Kette (2d und gibt noch keine Räumlicheposition an)
   Sekundäre-Strutur :
-    - nennt wenn vorhanden besonders häufig auftrettende Motive zu denen sich die Petidbindungen duch Wasserstoffbrücken zusammen stellen, diese verbindung der                          Wasserstoffbrücken nennt man auch Polypetid-Rückgrad, dabei unterscheidet man unter:α-Helix, β-Faltblatt, β-Schleife, β-Helix und ungeordneten, so genannte Random-Coil-            Strukturen.
+    - nennt wenn vorhanden besonders häufig auftrettende Motive zu denen sich die Petidbindungen duch Wasserstoffbrücken zusammen stellen, diese verbindung der                          Wasserstoffbrücken nennt man auch Polypetid-Rückgrat, dabei unterscheidet man unter:α-Helix, β-Faltblatt, β-Schleife, β-Helix und ungeordneten, so genannte Random-Coil-            Strukturen.
     - jede aminosäure hat einen Charakteristischen Winkel zu (auf wiki steht zwischen ) den Atomen des Rückgrats *was ich noch nicht ganz verstanden hab muss ich noch mal             genauer drauf schauen  >* diese werden in dem Ramachandran-Plot gegeneinander aufgetragen um die sog. Diederwinkel in einem Protein auf zu zeigen
-    
   Tetriäre-Struktur:
-  
+    - ist die der Sekundärstruktur übergeordnete räumliche Anordnung der Polypeptidkette
+    - sie wird vorallem durch dei verbindungen zwischen den Aminosäuren bestimmt
   Quatriäre-Struktur
   *ist noch nciht fertig muss jetzt aufhören weil silvester ist hatte es vorgestern auch schon weiter ich bin aber dumm und habs nicht hochgeladen lange geschichte 
