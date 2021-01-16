@@ -110,8 +110,11 @@ class Person {
     if (this.state == HEALTH.DEAD) return;
 
     this.pathFinder.startNode = this.pathFinder.nodes[Math.floor(this.position.x/nodeSize)][Math.floor(this.position.y/nodeSize)];
-    this.pathFinder.endNode = this.pathFinder.nodes[Math.floor(mouseX/nodeSize)][Math.floor(mouseY/nodeSize)];
-    // this.pathFinder.endNode = this.pathFinder.nodes[Math.floor(random(windowWidth)/nodeSize)][Math.floor(random(windowHeight)/nodeSize)];
+    // this.pathFinder.endNode = this.pathFinder.nodes[Math.floor(Math.random(windowWidth)/nodeSize)][Math.floor(Math.random(windowHeight)/nodeSize)];
+    if(!this.pathFinder.endNode)
+      this.pathFinder.endNode = this.pathFinder.nodes[Math.floor(random(windowWidth)/nodeSize)][Math.floor(random(windowHeight)/nodeSize)];
+    // console.log(this.pathFinder.endNode);
+    // this.pathFinder.endNode = this.pathFinder.nodes[Math.floor(mouseX/nodeSize)][Math.floor(mouseY/nodeSize)];
 
     if (neq(this.pathFinder.position, { x: Math.floor(this.position.x/nodeSize), y: Math.floor(this.position.y/nodeSize) }) || neq(this.pathFinder.lEndNode, this.pathFinder.endNode)) {
 
@@ -135,6 +138,8 @@ class Person {
     if (this.pathFinder.startNode != this.pathFinder.endNode) {
       this.velocity = createVector(this.pathFinder.nextN.x+0.5 - this.position.x/nodeSize, this.pathFinder.nextN.y+0.5 - this.position.y/nodeSize).normalize();
       this.position.add(this.velocity);
+    } else {
+      this.pathFinder.endNode = this.pathFinder.nodes[Math.floor(random(windowWidth)/nodeSize)][Math.floor(random(windowHeight)/nodeSize)];
     }
 
   }

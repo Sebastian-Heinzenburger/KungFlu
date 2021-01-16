@@ -20,8 +20,10 @@ function setup() {
     nodeSize = windowWidth/30;
     //create 15 Persons and store them in a people array
     for (let i = 0; i < 24; i++) { people.push(new Person()); }
+    people[1].infectWith(new Virus());
     createCanvas(windowWidth, windowHeight);
     simulationGRaphics = createGraphics(windowWidth, windowHeight);
+    // simulationGRaphics.translate(-windowWidth/2,-windowHeight/2);
 }
 
 function mousePressed(event) {
@@ -30,7 +32,8 @@ function mousePressed(event) {
         //...and check if its under the mousePointer
         if (dist(person.position.x, person.position.y, event.x, event.y) < 30) {
             //if so, then sneeze in his face!
-            person.infectWith(new Virus());
+            // person.infectWith(new Virus());
+            console.log(person);
         }
     });
     return false;
@@ -54,6 +57,11 @@ function keyPressed() {
     case 'C':
     case 'c':
       view = view == VIEWS.CIRCLE ? VIEWS.SIMULATION : VIEWS.CIRCLE;
+      break;
+      break;
+    case 'F':
+    case 'f':
+      view = view == VIEWS.FANCY ? VIEWS.SIMULATION : VIEWS.FANCY;
       break;
   }
 
@@ -95,7 +103,7 @@ function draw() {
         break;
     }
     if (currentAnalData.IMMUNE + currentAnalData.DEAD < people.length) {
-      analData.push(currentAnalData);
+      if (frameCount % 2 == 0) analData.push(currentAnalData);
     } else {
       if (!stopped)
         console.log(JSON.stringify(analData));
@@ -116,13 +124,15 @@ function renderSimulation() {
     // background(36);
     image(simulationGRaphics, 0, 0);
 
+    strokeWeight(1);
     fill(255);
+    noStroke();
     text(`${deltaTime.toFixed()} ms per frame`, 5, 15);
     text(`${people.length} people\n${Math.floor(windowWidth/nodeSize)}x${Math.floor(windowHeight/nodeSize)} path nodes`, 5, 35);
 }
 
 function renderBars() {
-    if(analData.length % 15 == 0 || stopped) {
+    if(analData.length % 1 == 0 || stopped) {
 
       //clear canvas
       background(36);
@@ -191,7 +201,20 @@ function renderCircle() {
 }
 
 function renderFancy() {
-  for (var i = 1; i < analData.length-1; i+=3) {
-
-  }
+  background(60);
+  noFill();
+  strokeWeight(3);
+  stroke(0, 0, 255);
+  drawCurve("HEALTHY");
+  stroke(20, 100, 20);
+  drawCurve("INFECTED");
+  stroke(0, 255, 0);
+  drawCurve("INFECTIOUS");
+  stroke(255, 255, 0);
+  drawCurve("IMMUNE");
+  stroke(10, 10, 10);
+  drawCurve("DEAD");
+  noStroke();
+  fill(255);
+  text(deltaTime, 10, 10)
 }
