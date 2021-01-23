@@ -18,6 +18,7 @@ function setup() {
   }
 
   createCanvas(windowWidth, windowHeight);
+  alert("press S and click to set START\npress E and click to set END\npress SPACE and click to REMOVE OBSTACLES\npress X and drag click to set OBSTACLES");
 }
 
 function preload() {
@@ -25,7 +26,8 @@ function preload() {
 }
 
 function draw() {
-  image(bg, 0, 0, windowWidth, windowHeight);
+
+  background(60);
 
   if (!path) {
     path = getPath(nodes);
@@ -39,8 +41,8 @@ function draw() {
         if(startNode === nodes[x][y]) fill(0, 0, 255);
         if(endNode === nodes[x][y]) fill(255, 0, 0);
         if(!nodes[x][y].isGood) fill(20);
+        console.log("ok");
         rect(nodes[x][y].x*nodeSize, nodes[x][y].y*nodeSize, nodeSize);
-        fill(0);
     }
   }
 
