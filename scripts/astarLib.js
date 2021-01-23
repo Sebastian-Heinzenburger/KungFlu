@@ -19,6 +19,7 @@ class AStar {
     //our goal and end
     this.startNode;
     this.endNode;
+    this.nodes = [];
   }
 
   //find the open node with the least f cost
@@ -50,9 +51,9 @@ class AStar {
 
       //top row
       if (n.y > 0) {
-        if (n.x > 0) { neighbours.push(ns[n.x-1][n.y-1]); }
+        // if (n.x > 0) { neighbours.push(ns[n.x-1][n.y-1]); }
         neighbours.push(ns[n.x][n.y-1]);
-        if (n.x < ns.length-1) { neighbours.push(ns[n.x+1][n.y-1]); }
+        // if (n.x < ns.length-1) { neighbours.push(ns[n.x+1][n.y-1]); }
       }
 
       //middle row
@@ -61,9 +62,9 @@ class AStar {
 
       //lower row
       if (n.y < ns[0].length-1) {
-        if (n.x > 0) { neighbours.push(ns[n.x-1][n.y+1]); }
+        // if (n.x > 0) { neighbours.push(ns[n.x-1][n.y+1]); }
         neighbours.push(ns[n.x][n.y+1]);
-        if (n.x < ns.length-1) { neighbours.push(ns[n.x+1][n.y+1]); }
+        // if (n.x < ns.length-1) { neighbours.push(ns[n.x+1][n.y+1]); }
       }
     } catch {
       console.log(n);

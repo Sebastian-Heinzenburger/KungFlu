@@ -11,14 +11,13 @@ class Person {
     this.virus = null;
     this.pathFinder = new AStar();
 
-    //create Nodes
+
     this.pathFinder.nodes = [];
-    for (var x = 0; x < windowWidth/nodeSize; x++) {
-      this.pathFinder.nodes.push([]);
-      for (var y = 0; y < windowHeight/nodeSize; y++) {
-        this.pathFinder.nodes[x][y] = new Node(x, y);
-      }
-    }
+    globalNodes.forEach(n => {
+      this.pathFinder.nodes.push(n);
+    });
+    console.log(this.pathFinder.nodes);
+
 
   }
 
@@ -114,9 +113,14 @@ class Person {
     if(!this.pathFinder.endNode)
       this.pathFinder.endNode = this.pathFinder.nodes[Math.floor(random(windowWidth)/nodeSize)][Math.floor(random(windowHeight)/nodeSize)];
     // console.log(this.pathFinder.endNode);
-    // this.pathFinder.endNode = this.pathFinder.nodes[Math.floor(mouseX/nodeSize)][Math.floor(mouseY/nodeSize)];
+    this.pathFinder.endNode = this.pathFinder.nodes[Math.floor(mouseX/nodeSize)][Math.floor(mouseY/nodeSize)];
 
     if (neq(this.pathFinder.position, { x: Math.floor(this.position.x/nodeSize), y: Math.floor(this.position.y/nodeSize) }) || neq(this.pathFinder.lEndNode, this.pathFinder.endNode)) {
+
+      this.pathFinder.nodes = [];
+      globalNodes.forEach(n => {
+        this.pathFinder.nodes.push(n);
+      });
 
       this.pathFinder.lEndNode = this.pathFinder.endNode;
       this.pathFinder.position =  {

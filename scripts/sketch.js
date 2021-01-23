@@ -1,4 +1,5 @@
 var nodeSize;
+let globalNodes = [];
 let people = [];
 let analData = [];
 let currentAnalData = {
@@ -18,12 +19,22 @@ function preload() {
 function setup() {
     view = VIEWS.SIMULATION;
     nodeSize = windowWidth/30;
+
+    for (var x = 0; x < windowWidth/nodeSize; x++) {
+      globalNodes.push([]);
+      for (var y = 0; y < windowHeight/nodeSize; y++) {
+        globalNodes[x][y] = new Node(x, y);
+      }
+    }
+
+    setupBackground();
     //create 15 Persons and store them in a people array
     for (let i = 0; i < 24; i++) { people.push(new Person()); }
     people[1].infectWith(new Virus());
     createCanvas(windowWidth, windowHeight);
     simulationGRaphics = createGraphics(windowWidth, windowHeight);
-    // simulationGRaphics.translate(-windowWidth/2,-windowHeight/2);
+
+
 }
 
 function mousePressed(event) {
@@ -112,8 +123,9 @@ function draw() {
 }
 
 function renderSimulation() {
-    simulationGRaphics.image(bg, 0, 0, windowWidth, windowHeight);
-    // simulationGRaphics.background(36);
+    simulationGRaphics.background(36);
+    drawBackground();
+    // simulationGRaphics.image(bg, 0, 0, windowWidth, windowHeight);
 
     //...and draw each person
     people.forEach(person => {
@@ -128,6 +140,7 @@ function renderSimulation() {
     fill(255);
     noStroke();
     text(`${deltaTime.toFixed()} ms per frame`, 5, 15);
+    text(`${Math.floor(mouseX/nodeSize)}, ${Math.floor(mouseY/nodeSize)}`, mouseX, mouseY);
     text(`${people.length} people\n${Math.floor(windowWidth/nodeSize)}x${Math.floor(windowHeight/nodeSize)} path nodes`, 5, 35);
 }
 
