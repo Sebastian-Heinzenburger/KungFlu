@@ -170,21 +170,22 @@ class Person {
     let c = this.getHealthColor();
 
     //draw self
-    simulationGRaphics.fill(c);
-    simulationGRaphics.ellipse(this.position.x, this.position.y, 20, 20);
+    simulationGraphics.fill(c);
+    simulationGraphics.ellipse(this.position.x, this.position.y, 20, 20);
 
     //if not dead
-    if (!(this.state == HEALTH.DEAD || this.state == HEALTH.IMMUNE)) {
+    // if (!(this.state == HEALTH.DEAD || this.state == HEALTH.IMMUNE)) {
+    if (this.state == HEALTH.INFECTIOUS) {
       //draw infect radius
       c.setAlpha(90);
-      simulationGRaphics.fill(c);
-      simulationGRaphics.ellipse(this.position.x, this.position.y, this.infectRadius, this.infectRadius);
+      simulationGraphics.fill(c);
+      simulationGraphics.ellipse(this.position.x, this.position.y, this.infectRadius, this.infectRadius);
     }
 
     //debug text
-    // simulationGRaphics.fill(255);
-    // simulationGRaphics.text(this.state, this.position.x+20, this.position.y);
-    // simulationGRaphics.text(this.localTimer, this.position.x+20, this.position.y+20);
+    // simulationGraphics.fill(255);
+    // simulationGraphics.text(this.state, this.position.x+20, this.position.y);
+    // simulationGraphics.text(this.localTimer, this.position.x+20, this.position.y+20);
   }
 
   //return color according to current health

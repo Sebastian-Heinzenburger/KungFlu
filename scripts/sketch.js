@@ -10,7 +10,7 @@ let currentAnalData = {
       DEAD: 0
 };
 let view, stopped = false;
-var simulationGRaphics, newImg, bg;
+var simulationGraphics, newImg, bg;
 
 function preload() {
   bg = loadImage('pictures/Klassenzimmer.png');
@@ -32,13 +32,13 @@ function setup() {
     for (let i = 0; i < 24; i++) { people.push(new Person()); }
     people[1].infectWith(new Virus());
     createCanvas(windowWidth, windowHeight);
-    simulationGRaphics = createGraphics(windowWidth, windowHeight);
+    simulationGraphics = createGraphics(windowWidth, windowHeight);
 
 
 }
 
 function mousePressed(event) {
-    //cycle through every person...
+ //cycle through every person...
     people.forEach(person => {
         //...and check if its under the mousePointer
         if (dist(person.position.x, person.position.y, event.x, event.y) < 30) {
@@ -123,9 +123,9 @@ function draw() {
 }
 
 function renderSimulation() {
-    simulationGRaphics.background(36);
+    simulationGraphics.background(36);
     drawBackground();
-    // simulationGRaphics.image(bg, 0, 0, windowWidth, windowHeight);
+    // simulationGraphics.image(bg, 0, 0, windowWidth, windowHeight);
 
     //...and draw each person
     people.forEach(person => {
@@ -134,7 +134,7 @@ function renderSimulation() {
 
     //clear canvas
     // background(36);
-    image(simulationGRaphics, 0, 0);
+    image(simulationGraphics, 0, 0);
 
     strokeWeight(1);
     fill(255);
