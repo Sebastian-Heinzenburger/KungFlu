@@ -6,7 +6,7 @@ let bg;
 
 function setup() {
   doFull = false;
-  nodeSize = Math.floor(windowWidth/30);
+  nodeSize = windowWidth > windowHeight ? windowHeight/22 : windowWidth/39;
 
   let n;
   for (var x = 0; x < windowWidth/nodeSize; x++) {
