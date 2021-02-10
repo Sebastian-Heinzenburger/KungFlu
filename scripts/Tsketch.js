@@ -234,7 +234,7 @@ function renderSimulation() {
     fill(255);
     noStroke();
     text(deltaTime.toFixed() + " ms per frame", 5, 15);
-    text(people.length + " Sch\u00FCler\n" + Math.floor(windowWidth / nodeSize) + "x" + Math.floor(windowHeight / nodeSize) + " Wegpunkte\naktueller R-Wert: " + getR().toFixed(2), 5, 35);
+    text(people.length + " Sch\u00FCler\n" + Math.floor(windowWidth / nodeSize) + "x" + Math.floor(windowHeight / nodeSize) + " Wegpunkte\naktueller R-Wert: " + getR().toFixed(2) + "\n------------------\nF - Graph\nC - Kreisdiagramm\nB - Experimentelles\nA - Einstellungen\n", 5, 35);
     strokeWeight(1);
     stroke(255);
     fill(255);
