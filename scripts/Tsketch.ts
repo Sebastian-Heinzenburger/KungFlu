@@ -251,7 +251,13 @@ function renderSimulation() {
     text(`${deltaTime.toFixed()} ms per frame`, 5, 15);
     text(`${people.length} Schüler
 ${Math.floor(windowWidth/nodeSize)}x${Math.floor(windowHeight/nodeSize)} Wegpunkte
-aktueller R-Wert: ${getR().toFixed(2)}`,5, 35);
+aktueller R-Wert: ${getR().toFixed(2)}
+------------------
+F - Graph
+C - Kreisdiagramm
+B - Experimentelles
+A - Einstellungen
+`,5, 35);
     strokeWeight(1);
     stroke(255);
     fill(255);
