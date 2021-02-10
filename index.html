@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="pictures/person.jpg">
+
+     <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/p5.min.js"></script>
+<!--    <script type="text/javascript" src="./scripts/p5.js"></script>-->
+    <script type="text/javascript" src="./scripts/Tutils.js"></script>
+    <script type="text/javascript" src="./scripts/Tobstacles.js"></script>
+    <script type="text/javascript" src="./scripts/TimeTables.js"></script>
+    <script type="text/javascript" src="./scripts/TastarLib.js"></script>
+    <script type="text/javascript" src="./scripts/TVirus.js"></script>
+    <script type="text/javascript" src="./scripts/TPerson.js"></script>
+    <script type="text/javascript" src="./scripts/renderData/Tcirclediagram.js"></script>
+    <script type="text/javascript" src="./scripts/renderData/Tbardiagram.js"></script>
+    <script type="text/javascript" src="./scripts/renderData/TexperimentalGraph.js"></script>
+    <script type="text/javascript" src="./scripts/Tsketch.js"></script>
+
+    <title>Virus-Simulation</title>
+</head>
+
+<style media="screen">
+    .slider {
+        /*-webkit-appearance: none; */
+        /*appearance: none;*/
+        width: 70%; /* Full-width */
+        height: 10px; /* Specified height */
+        background: #000000; /* Grey background */
+        outline: none; /* Remove outline */
+        opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+        -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+        transition: opacity .2s;
+        float: right;
+        margin-right: 2%;
+    }
+    /* Mouse-over effects */
+    .slider:hover {
+        opacity: 1; /* Fully shown on mouse-over */
+    }
+
+    /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none; /* Override default look */
+        appearance: none;
+        width: 15px; /* Set a specific slider handle width */
+        height: 15px; /* Slider handle height */
+        background: #FFFFFF; /* Green background */
+
+    ; /* Green background */
+    }
+
+    .slider::-moz-range-thumb {
+        width: 15px; /* Set a specific slider handle width */
+        height: 15px; /* Slider handle height */
+        background: #FFFFFF; /* Green background */
+    ; /* Green background */
+    }
+
+    .checkbox {
+        float: right;
+        margin-right: 70%;
+        width: 16px;
+        height: 16px;
+    }
+</style>
+
+<body style="margin: 0; background: #262626">
+<div class="canvasDiv" id="canvasD"></div>
+<div class="slidecontainer" id="sliderD" style="font-family:Arial,monospace; font-size: 16px; margin-left: 1%; color: #FFFFFF">
+    <h1>Settings:</h1>
+    <div style="float: right; font-size: 20px; margin-right:2%; color: #FF2080">
+        <span>Drücke A um die Simulation zu starten!<br></span>
+        <span style="color: #AF0050"> Du kannst jederzeit wieder hierhin zurückkehren </span>
+    </div>
+    <br>
+    <h2>Einstellungen:</h2>
+        <p>
+            Schüleranzahl:&nbsp;
+            <input type="range" min="1" max="24" value="24" class="slider" id="people" oninput="apeople.value=this.value">&nbsp;&nbsp;
+            <output id="apeople" for="apeople">24</output>
+        </p>
+
+    <h2>Stundenplan:</h2>
+        <p>
+            Unterrichtsstundenlänge:&nbsp;
+            <input type="range" min="0" max="180" value="90" class="slider" id="lessond" oninput="alessond.value=this.value">&nbsp;&nbsp;
+            <output id="alessond">90</output> min
+        </p>
+        <p>
+            Kleine Pausenlänge:&nbsp;
+            <input type="range" min="0" max="20" value="10" class="slider" id="sbreakd" oninput="asbreakd.value=this.value">&nbsp;&nbsp;
+            <output id="asbreakd">10</output> min
+        </p>
+        <p> Große Pausenlänge:&nbsp;
+            <input type="range" min="0" max="160" oninput="abreakd.value=breakd.value" value="80" class="slider" id="breakd">&nbsp;&nbsp;
+            <output id="abreakd" for="breakd">80</output> min
+        </p>
+        <p>
+            Zeit zuhause:&nbsp;
+            <input type="range" min="0" max="1140" value="120" class="slider" id="homed" oninput="ahomed.value=(this.value/60).toFixed(1)">&nbsp;&nbsp;
+            <output id="ahomed">2</output>&nbsp;&nbsp;h
+        </p>
+
+    <h2>Schutzmaßnahmen:</h2>
+        <p>
+            Zuhausebleiben wenn man sich krank fühlt:&nbsp;
+            <input type="checkbox" class="checkbox" id="stayAtHomeWhenSick">
+        </p>
+        <p>
+            Masken, die nur beim ausatmen filtern:
+            <input type="checkbox" class="checkbox" id="mask">
+        </p>
+            <p>
+            Nur Filtern beim Einatmen:
+            <input type="checkbox" class="checkbox" id="ffp2">
+        </p>
+        <p>
+            Schutz durch Masken:&nbsp;
+            <input type="range" min="1" max="100" value="90" class="slider" id="maskprotection" oninput="amaskprotection.value=this.value">&nbsp;&nbsp;
+            <output id="amaskprotection">90</output> %
+        </p>
+
+
+    <h2>Pathogen: </h2>
+        <p>
+            Erregereigenschaften global überschreiben:
+            <input type="checkbox" class="checkbox" id="override">
+        </p>
+        <p>
+            Latenzzeit:&nbsp;
+            <input type="range" min="1" max="1440" value="500" class="slider" id="latenz" oninput="alat.value=(this.value/60).toFixed(1)">&nbsp;&nbsp;
+            <output id="alat">500</output> h
+        </p>
+        <p>
+            Inkubationszeit:&nbsp;
+            <input type="range" min="1" max="1440" value="1000" class="slider" id="incubation" oninput="aink.value=(this.value/60).toFixed(1)">&nbsp;&nbsp;
+            <output id="aink">16.6</output> h
+        </p>
+        <p>
+            Rekonvaleszenzzeit:&nbsp;
+            <input type="range" min="1" max="1440" value="1000" class="slider" id="recon" oninput="arec.value=(this.value/60).toFixed(1)">&nbsp;&nbsp;
+            <output id="arec">16.6</output> h
+        </p>
+        <p>
+            Letalität:&nbsp;
+            <input type="range" min="0" max="100" value="50" class="slider" id="letalitaet" oninput="alet.value=this.value">&nbsp;&nbsp;
+            <output id="alet">50</output> %
+        </p>
+        <p>
+            Infektiosität:&nbsp;
+            <input type="range" min="0" max="100" value="50" class="slider" id="pInfection" oninput="ainf.value=this.value">&nbsp;&nbsp;
+            <output id="ainf">50</output> %
+        </p>
+
+        <h3>Symptome:</h3>
+            <p>
+                Niesen:&nbsp;
+                <input type="range" min="0" max="100" value="10" class="slider" id="sneez" oninput="nies.value=this.value">&nbsp;&nbsp;
+                <output id="nies">10</output> ‰
+            </p>
+            <p>
+                Husten:&nbsp;
+                <label for="cough"></label><input type="range" min="0" max="100" value="10" class="slider" id="cough" oninput="acou.value=this.value">&nbsp;&nbsp;
+                <output id="acou">10</output> ‰
+            </p>
+            <p>
+                Spontanes Augenbluten:&nbsp;
+                <input type="range" min="0" max="100" value="10" class="slider" id="eye" oninput="aeye.value=this.value">&nbsp;&nbsp;
+                <output id="aeye">10</output> ‰
+            </p>
+        <h3>Mutation:</h3>
+            <p>
+                Latenzzeit:&nbsp;
+                <input type="range" min="0" max="200" value="50" class="slider" id="mlatenz" oninput="amlat.value=this.value">&nbsp;&nbsp;
+                <output id="amlat">50</output> %
+            </p>
+            <p>
+                Inkubationszeit:&nbsp;
+                <input type="range" min="0" max="200" value="50" class="slider" id="mincubation" oninput="aminc.value=this.value">&nbsp;&nbsp;
+                <output id="aminc">50</output> %
+            </p>
+            <p>
+                Rekonvaleszenzzeit:&nbsp;
+                <input type="range" min="0" max="200" value="50" class="slider" id="mrecon" oninput="amrec.value=this.value">&nbsp;&nbsp;
+                <output id="amrec">50</output> %
+            </p>
+            <p>
+                Letalität:&nbsp;
+                <input type="range" min="0" max="200" value="50" class="slider" id="mletalitaet" oninput="amlet.value=this.value">&nbsp;&nbsp;
+                <output id="amlet">50</output> %
+            </p>
+            <p>
+                Infektiosität:&nbsp;
+                <input type="range" min="0" max="200" value="50" class="slider" id="mpInfection" oninput="amInfec.value=this.value">&nbsp;&nbsp;
+                <output id="amInfec">50</output> %
+            </p>
+            <p>
+                Niesen:&nbsp;
+                <input type="range" min="0" max="200" value="50" class="slider" id="msneez" oninput="amSneez.value=this.value">&nbsp;&nbsp;
+                <output id="amSneez">50</output> %
+            </p>
+            <p>
+                Husten:&nbsp;
+                <input type="range" min="0" max="200" value="50" class="slider" id="mcough" oninput="amCo.value=this.value">&nbsp;&nbsp;
+                <output id="amCo">50</output> %
+            </p>
+            <p>
+                Spontanes Augenbluten:&nbsp;
+                <input type="range" min="0" max="200" value="50" class="slider" id="meye" oninput="amey.value=this.value">&nbsp;&nbsp;
+                <output id="amey">50</output> %
+            </p>
+
+
+    <h2>Config: </h2>
+        <p>
+            Speed (Computations per frame):&nbsp;
+            <input type="range" min="1" max="15" value="1" class="slider" id="speedSlider">&nbsp;&nbsp;
+        </p>
+        <p>
+            Info fadeout speed:&nbsp;
+            <input type="range" min="20" max="800" value="200" class="slider" id="fadeoutSlider">&nbsp;&nbsp;
+        </p>
+
+
+</div>
+</body>
+</html>

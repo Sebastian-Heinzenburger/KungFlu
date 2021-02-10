@@ -1,0 +1,10 @@
+# Project exclude paths
+#/scripts/renderData/Tbardiagram.js
+#/scripts/renderData/Tcirclediagram.js
+#/scripts/renderData/TexperimentalGraph.js
+#/scripts/TastarLib.js
+#/scripts/Tobstacles.js
+#/scripts/TPerson.js
+#/scripts/Tsketch.js
+#/scripts/Tutils.js
+#/scripts/TVirus.js
