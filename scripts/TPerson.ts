@@ -284,7 +284,7 @@ _____GENERELL_____
     _m.limit(60);
 
     let _h = _m.y > 0 ? 220 : -220;
-    let _w = _m.x > 0 ? 160 : -160;
+    let _w = _m.x > 0 ? 170 : -170;
     let _x = this.position.x + _m.x;
     let _y = this.position.y + _m.y;
 
