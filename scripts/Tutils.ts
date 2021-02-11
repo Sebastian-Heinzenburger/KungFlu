@@ -164,7 +164,7 @@ enum VIEWS {
     people.forEach(person => {
         _r += person.infectedPeople;
     });
-    return (_r/(people.length - currentAnalData.HEALTHY - currentAnalData.INFECTED))
+    return (_r/(people.length - currentAnalData.HEALTHY - currentAnalData.SYMPTOMS - currentAnalData.INFECTED))
  }
 
 
