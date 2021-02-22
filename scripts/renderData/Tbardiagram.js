@@ -1,7 +1,7 @@
 ///<reference path="../Tsketch.ts"/>
 ///<reference path="../../../../.config/JetBrains/WebStorm2020.3/javascript/extLibs/global-types/node_modules/@types/p5/global.d.ts"/>
 function renderBars() {
-    if (analData.length % 1 === 0 || stopped) {
+    if (analData.length % 1 == 0 || stopped) {
         //clear canvas
         background(36);
         var index_1 = 1;

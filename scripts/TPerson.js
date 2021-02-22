@@ -49,6 +49,8 @@ var Person = /** @class */ (function () {
     Person.prototype.createAerosol = function () {
         if (!aerosols)
             return;
+        if (getCurrentLessonIndex() == timetables[0][0].length - 1)
+            return;
         if (humidity < 0.4 && random(1) > 0.1)
             return;
         if (humidity > 0.4 && random(1) > 0.5)
@@ -82,7 +84,7 @@ var Person = /** @class */ (function () {
         if (this.virus.tIncubation < this.localTimer)
             this.state = HEALTH.SYMPTOMS;
         //Symptome?
-        if (this.state === HEALTH.SYMPTOMS) {
+        if (this.state === HEALTH.SYMPTOMS && curr) {
             //für jedes Symptom
             for (var symptom in this.virus.symptoms) {
                 if (!mask && random(1) < this.virus.symptoms[symptom]) {

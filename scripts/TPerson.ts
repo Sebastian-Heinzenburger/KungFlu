@@ -70,6 +70,7 @@ class Person {
 
   createAerosol(): void {
     if (!aerosols) return;
+    if (getCurrentLessonIndex() == timetables[0][0].length - 1) return;
     if (humidity < 0.4 && random(1) > 0.1) return;
     if (humidity > 0.4 && random(1) > 0.5) return;
 
@@ -106,7 +107,7 @@ class Person {
     if (this.virus.tIncubation < this.localTimer) this.state = HEALTH.SYMPTOMS;
 
     //Symptome?
-    if (this.state === HEALTH.SYMPTOMS) {
+    if (this.state === HEALTH.SYMPTOMS && curr) {
 
       //für jedes Symptom
       for (let symptom in this.virus.symptoms) {
