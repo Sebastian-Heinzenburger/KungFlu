@@ -166,7 +166,7 @@ function getR(max) {
     });
     if (max)
         return _m;
-    return (_r / (people.length - currentAnalData.HEALTHY));
+    return (_r / (people.length - currentAnalData.HEALTHY - currentAnalData.INFECTED));
 }
 // function drawCurve(_healthtype) {
 //   beginShape();

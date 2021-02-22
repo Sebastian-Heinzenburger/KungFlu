@@ -71,22 +71,22 @@ class Person {
   createAerosol(): void {
     if (!aerosols) return;
     if (getCurrentLessonIndex() == timetables[0][0].length - 1) return;
-    if (humidity < 0.4 && random(1) > 0.1) return;
-    if (humidity > 0.4 && random(1) > 0.5) return;
+    if (humidity > 0.4 && random(1) > 0.1) return;
+    if (humidity < 0.4 && random(1) > 0.5) return;
 
     let n = {
       x: floor(this.position.x / nodeSize),
       y: floor(this.position.y / nodeSize),
     }
 
-    let r = 4;
-    let s = 400;
+    let r = 5;
+    let s = 4000;
     for (let x = -r; x < r; x++) {
       for (let y = -r; y < r; y++) {
         try {
           let node = globalNodes[n.x + x][n.y + y];
           if (node.isGood) {
-            node.aerosol += (s / (dist(n.x, n.y, n.x + x, n.y + y) + 1))
+            node.aerosol += (s * pow(0.5, (dist(n.x, n.y, n.x + x, n.y + y) + 1)))
             node.infector = this;
           }
         } catch {
@@ -107,7 +107,7 @@ class Person {
     if (this.virus.tIncubation < this.localTimer) this.state = HEALTH.SYMPTOMS;
 
     //Symptome?
-    if (this.state === HEALTH.SYMPTOMS && curr) {
+    if (this.state === HEALTH.SYMPTOMS && getCurrentLessonIndex() !== timetables[0][0].length - 1) {
 
       //für jedes Symptom
       for (let symptom in this.virus.symptoms) {
@@ -155,7 +155,7 @@ class Person {
           if (dist(person.position.x, person.position.y, _this.position.x, _this.position.y) < _this.infectRadius) {
             //and infectable
             if (person.state === HEALTH.HEALTHY || person.state === HEALTH.IMMUNE) {
-              if (random(1) < _this.virus.pInfection*maskProtection*(oneWayMask ? (1-maskProtection) : 1)) {
+              if (random(1) < _this.virus.pInfection*(1-maskProtection)*(oneWayMask ? (1-maskProtection) : 1)) {
                 if (person.state === HEALTH.IMMUNE && this.virus.isNotSimilarEnough(person.virus)) {
                   person.infectWith(this.virus.get());
                   this.infectedPeople++;
@@ -260,8 +260,11 @@ class Person {
       }
     }
 
+    //TODO:
     if (map(this.pathFinder.startNode.aerosol, 0, 400, 0, 1) >random(1)) {
       this.infectWith(this.pathFinder.startNode.infector.virus.get());
+      if (this.state == HEALTH.HEALTHY)
+        this.pathFinder.startNode.infector.infectedPeople++;
     }
 
   }

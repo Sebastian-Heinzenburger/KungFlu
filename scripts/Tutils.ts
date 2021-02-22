@@ -194,7 +194,7 @@ enum VIEWS {
         if (person.infectedPeople > _m) _m = person.infectedPeople;
     });
     if (max) return _m;
-    return (_r/(people.length-currentAnalData.HEALTHY))
+    return (_r/(people.length-currentAnalData.HEALTHY-currentAnalData.INFECTED))
  }
 
 

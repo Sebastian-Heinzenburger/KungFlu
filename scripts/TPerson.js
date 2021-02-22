@@ -51,22 +51,22 @@ var Person = /** @class */ (function () {
             return;
         if (getCurrentLessonIndex() == timetables[0][0].length - 1)
             return;
-        if (humidity < 0.4 && random(1) > 0.1)
+        if (humidity > 0.4 && random(1) > 0.1)
             return;
-        if (humidity > 0.4 && random(1) > 0.5)
+        if (humidity < 0.4 && random(1) > 0.5)
             return;
         var n = {
             x: floor(this.position.x / nodeSize),
             y: floor(this.position.y / nodeSize),
         };
-        var r = 4;
-        var s = 400;
+        var r = 5;
+        var s = 4000;
         for (var x = -r; x < r; x++) {
             for (var y = -r; y < r; y++) {
                 try {
                     var node = globalNodes[n.x + x][n.y + y];
                     if (node.isGood) {
-                        node.aerosol += (s / (dist(n.x, n.y, n.x + x, n.y + y) + 1));
+                        node.aerosol += (s * pow(0.5, (dist(n.x, n.y, n.x + x, n.y + y) + 1)));
                         node.infector = this;
                     }
                 }
@@ -84,7 +84,7 @@ var Person = /** @class */ (function () {
         if (this.virus.tIncubation < this.localTimer)
             this.state = HEALTH.SYMPTOMS;
         //Symptome?
-        if (this.state === HEALTH.SYMPTOMS && curr) {
+        if (this.state === HEALTH.SYMPTOMS && getCurrentLessonIndex() !== timetables[0][0].length - 1) {
             //für jedes Symptom
             for (var symptom in this.virus.symptoms) {
                 if (!mask && random(1) < this.virus.symptoms[symptom]) {
@@ -130,7 +130,7 @@ var Person = /** @class */ (function () {
                     if (dist(person.position.x, person.position.y, _this.position.x, _this.position.y) < _this.infectRadius) {
                         //and infectable
                         if (person.state === HEALTH.HEALTHY || person.state === HEALTH.IMMUNE) {
-                            if (random(1) < _this.virus.pInfection * maskProtection * (oneWayMask ? (1 - maskProtection) : 1)) {
+                            if (random(1) < _this.virus.pInfection * (1 - maskProtection) * (oneWayMask ? (1 - maskProtection) : 1)) {
                                 if (person.state === HEALTH.IMMUNE && _this_1.virus.isNotSimilarEnough(person.virus)) {
                                     person.infectWith(_this_1.virus.get());
                                     _this_1.infectedPeople++;
@@ -223,8 +223,11 @@ var Person = /** @class */ (function () {
                 this.atHome = true;
             }
         }
+        //TODO:
         if (map(this.pathFinder.startNode.aerosol, 0, 400, 0, 1) > random(1)) {
             this.infectWith(this.pathFinder.startNode.infector.virus.get());
+            if (this.state == HEALTH.HEALTHY)
+                this.pathFinder.startNode.infector.infectedPeople++;
         }
     };
     Person.prototype.getNextNode = function () {
