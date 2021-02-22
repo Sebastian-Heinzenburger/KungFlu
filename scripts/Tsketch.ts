@@ -1,4 +1,3 @@
-///<reference path="../../../.config/JetBrains/WebStorm2020.3/javascript/extLibs/global-types/node_modules/@types/p5/global.d.ts"/>
 ///<reference path="Tutils.ts"/>
 ///<reference path="renderData/Tcirclediagram.ts"/>
 ///<reference path="renderData/TexperimentalGraph.ts"/>
@@ -6,14 +5,23 @@
 ///<reference path="Tobstacles.ts"/>
 ///<reference path="renderData/Tbardiagram.ts"/>
 ///<reference path="TastarLib.ts"/>
+///<reference path="TimeTables.ts"/>
 ///<reference path="TPerson.ts"/>
-///<reference path="../../../.config/JetBrains/WebStorm2020.3/javascript/extLibs/global-types/node_modules/@types/p5/src/image/p5.Image.d.ts"/>
+
 // @ts-ignore
 p5.disableFriendlyErrors = true;
-let canvas;
-let nodeSize;
-let globalNodes = [];
+
+// @ts-ignore
+let canvas: p5.Renderer;
+// @ts-ignore
+let experimentalGraphImage: p5.Image;
+// @ts-ignore
+let personImage: p5.Image;
+
 let people: Person[] = [];
+let nodeSize: number;
+
+let globalNodes: PathFinderNode[][] = [];
 let analData = [];
 let currentAnalData = {
       HEALTHY: 0,
@@ -24,52 +32,38 @@ let currentAnalData = {
       DEAD: 0,
       R: 0,
 };
+
 let view = VIEWS.SIMULATION;
 let stopped: boolean = false;
 let paused: boolean = true;
-let newImg, bg;
-let stayAtHomeWhenSick: boolean;
-// @ts-ignore
-let personImage: p5.Image;
-let mask: boolean;
-let ffp2: boolean;
+
+let mask, oneWayMask, aerosols, openWindows, stayAtHomeWhenSick: boolean;
 let maskProtection: number;
+let humidity: number;
 
+//load the player image from the server
 function preload() {
-
-    personImage = loadImage('pictures/person.jpg')
-    // bg = loadImage('pictures/Klassenzimmer.png');
+    personImage = loadImage('pictures/person.jpg');
 }
-0
+
+//fill the array of all the waypoints
+function initializeGlobalNodes() {
+    for (let x = 0; x <= windowWidth/nodeSize; x++) {
+        globalNodes.push([]);
+        for (let y = 0; y < windowHeight/nodeSize; y++) {
+            globalNodes[x][y] = new PathFinderNode(x, y);
+        }
+    }
+}
+
 function setup() {
 
-//     alert(`
-// Nachricht für Joni
-// ------------------
-// Das ganze ist (immernoch nicht) fertig
-// z.B. fehlen noch Schutzmaßnahmen
-// Hier ist ne Liste mit den Keybindings:
-// B: Blockgraph
-// F: Fancygraphen
-// C: Kreisdiagram
-// A: Einstellungen
-// P: Pausieren
-//
-// Außerdem kann man für Informationen auf die Leute klicken :)
-//     `)
-
-    // nodeSize = windowWidth/(39 + (windowWidth/(windowHeight/22))/39);
+    //handle window rotation dynamically
     nodeSize = windowWidth > windowHeight ? windowHeight/22 : windowWidth/39;
 
     showSliders();
 
-
-    for (let x = 0; x <= windowWidth/nodeSize; x++) {
-      globalNodes.push([]);
-      for (let y = 0; y < windowHeight/nodeSize; y++) {
-        globalNodes[x][y] = new PathFinderNode(x, y);
-      }
-    }
+    initializeGlobalNodes();
 
     canvas = createCanvas(windowWidth, windowHeight);
     canvas.hide();
@@ -82,39 +76,17 @@ function setup() {
     for (let i = 0; i < 24; i++) { people.push(new Person()); }
     people[0].infectWith(new Virus());
 
-    /*
-    people[0].virus.tLatenz = <number>select("#latenz").value()
-    people[0].virus.tIncubation = <number>select("#incubation").value()
-    people[0].virus.tRekonvaleszenz = <number>select("#recon").value()
-    people[0].virus.rLetalitaet = <number>select("#letalitaet").value()/100
-    people[0].virus.pInfection = <number>select("#pInfection").value()/100
-
-    people[0].virus.symptoms.SNEEZING = <number>select("#sneez").value()/1000;
-    people[0].virus.symptoms.COUGHING = <number>select("#cough").value()/1000;
-    people[0].virus.symptoms.SPONTANIOUS_EYE_BLEEDING = <number>select("#eye").value()/1000;
-
-    people[0].virus.mutation.tLatenz = <number>select("#mlatenz").value()/100
-    people[0].virus.mutation.tIncubation = <number>select("#mincubation").value()/100
-    people[0].virus.mutation.tRekonvaleszenz = <number>select("#mrecon").value()/100
-    people[0].virus.mutation.rLetalitaet = <number>select("#mletalitaet").value()/100
-    people[0].virus.mutation.pInfection = <number>select("#mpInfection").value()/100
-    people[0].virus.mutation.SNEEZING = <number>select("#msneez").value()/100
-    people[0].virus.mutation.COUGHING = <number>select("#mcough").value()/100
-    people[0].virus.mutation.SPONTANIOUS_EYE_BLEEDING = <number>select("#meye").value()/100
-    */
-
-
-
 }
 
+//handle mouse input in order to show information about the students
 function mousePressed(event) {
-    if (canvas.style("display") == "none") return true;
+    if (areSettingsVisible()) return true;
+
     //cycle through every person...
     people.forEach(person => {
         //...and check if its under the mousePointer
         if (dist(person.position.x, person.position.y, event.x, event.y) < 30) {
-            //if so, then sneeze in his face!
-            // person.infectWith(new Virus());
+            //then showInfo
             person.showInfo = Config.fadeTime;
             person.drawInfo(person.getHealthColor());
         }
@@ -123,52 +95,94 @@ function mousePressed(event) {
     return true;
 }
 
+//handle keyboard input in order to switch views
 function keyPressed() {
 
   switch (key) {
     //just because I got used to pressing a
     case 'a':
     case 'A':
-        if (getR() < 1) paused = false;
-        if (canvas.style("display") == "none") {
-            hideSliders();
-            canvas.show();
-        } else {
-            canvas.hide();
-            showSliders()
-        }
+        paused = false;
+        toggleSettingScreen();
         break;
+
     case 'B':
     case 'b':
-      view = view === VIEWS.BARS ? VIEWS.SIMULATION : VIEWS.BARS;
-      break;
+        view = view === VIEWS.BARS ? VIEWS.SIMULATION : VIEWS.BARS;
+        break;
+
+    //switch back to the simulation from wherever you are
     case 'S':
     case 's':
-      view = VIEWS.SIMULATION;
-      break;
+        hideSliders();
+        canvas.show();
+        view = VIEWS.SIMULATION;
+        break;
+
+    //Draw the nice circle - Pie Chart
     case 'C':
     case 'c':
-      view = view === VIEWS.CIRCLE ? VIEWS.SIMULATION : VIEWS.CIRCLE;
-      break;
-      case 'P':
-      case ' ':
-      case 'p':
-          paused = !paused;
-          break;
-    case 'F':
-    case 'f':
+        view = view === VIEWS.CIRCLE ? VIEWS.SIMULATION : VIEWS.CIRCLE;
+        break;
+
+    //pause the simulation - stop it now!!!
+    case 'P':
+    case ' ':
+    case 'p':
+        paused = !paused;
+        break;
+
+      //zapp between smooth graph, exact graph and back to the simulation
+      case 'F':
+      case 'f':
         if (view === VIEWS.FANCY2) {
-            view = VIEWS.FANCY
+        view = VIEWS.FANCY
         } else {
-            view = view === VIEWS.SIMULATION ? VIEWS.FANCY2 : VIEWS.SIMULATION
+        view = view === VIEWS.SIMULATION ? VIEWS.FANCY2 : VIEWS.SIMULATION
         }
-      break;
+        break;
+
     default:
-      return true;
+        return true;
   }
 
   return true;
 
+}
+
+//reset all the blockades
+function clearNodes(): void {
+    globalNodes.forEach(_gL => {
+        _gL.forEach(_gN => {
+            _gN.isGood = true;
+        })
+    });
+}
+
+//step through the lessons to find out where we are now
+//gets worse the longer it runs, but isn't so expensive to calculate
+function getCurrentLessonIndex() {
+    let _t = [
+        lessonDuration, //0
+        shortBreakDuration, //1
+        lessonDuration, //2
+        shortBreakDuration, //3
+        lessonDuration, //4
+        BreakDuration, //5
+        shortBreakDuration, //6
+        lessonDuration, //7
+        shortBreakDuration, //8
+        lessonDuration, //9
+        lessonDuration, //10
+        homeDuration
+    ];
+    let tNow = 0;
+    let lessonsSince0 = 0;
+    while (tNow < frameCount) {
+        tNow+=_t[lessonsSince0%_t.length]
+        lessonsSince0++;
+    }
+    return (lessonsSince0-1)%_t.length;
 }
 
 function draw() {
@@ -176,8 +190,9 @@ function draw() {
 
     updateSliderValues();
 
-    //update...
     for (let i = 0; i < Config.speed; i++) {
+
+        //initialize data piece that is updated by every person according to their health
         currentAnalData = {
             HEALTHY: 0,
             INFECTED: 0,
@@ -188,16 +203,30 @@ function draw() {
             // @ts-ignore
             R: parseFloat(getR())
         };
-        globalNodes.forEach(_gN => {
-            _gN.isGood = true;
-        });
+
+        //set all the nodes as good (this is used for the Mindestabstand later... maybe...)
+        clearNodes();
+
+        //set nodes with obstacles as "not  good"
         baseNodeIndexes.forEach(_bNI => {
             try{ globalNodes[_bNI[0]][_bNI[1]].isGood = false; } catch {}
         });
+
+        //update the aerosole
+        globalNodes.forEach(ns => {
+            ns.forEach(n => {
+                if (n.aerosol > 0) n.aerosol--;
+                // @ts-ignore
+                if (openWindows && [1, 3, 5, 6, 7].includes(getCurrentLessonIndex())) {
+                    n.aerosol = 0;
+                }
+            });
+        });
+
         people.forEach(person => {
             person.update();
-            // globalNodes[Math.floor(person.position.x/nodeSize)][Math.floor(person.position.y/nodeSize)].isGood = false;
         });
+
         if (!stopped && currentAnalData.INFECTIOUS + currentAnalData.SYMPTOMS + currentAnalData.INFECTED >= 1) {
             if (frameCount % 2 === 0) analData.push(currentAnalData);
         } else {
@@ -219,8 +248,8 @@ function draw() {
           renderFancy2();
         break;
       case VIEWS.BARS:
-        if (stopped && newImg !== undefined) {
-          image(newImg, 0, 0, windowWidth, windowHeight);
+        if (stopped && experimentalGraphImage !== undefined) {
+          image(experimentalGraphImage, 0, 0, windowWidth, windowHeight);
           return;
         }
         renderBars();
@@ -238,7 +267,19 @@ function draw() {
 function renderSimulation() {
     background(36);
     drawBackground();
-    // simulationGraphics.image(bg, 0, 0, windowWidth, windowHeight);
+    globalNodes.forEach(ns => {
+        ns.forEach(n => {
+            noStroke();
+            fill(0, 255, 0, n.aerosol);
+            rect(n.x*nodeSize, n.y*nodeSize, nodeSize, nodeSize);
+        })
+    });
+
+    // @ts-ignore
+    if (openWindows && [1, 3, 5, 6, 8].includes(getCurrentLessonIndex())) {
+        fill(7, 199, 247, 30);
+        rect(nodeSize, nodeSize, nodeSize*31, nodeSize*20, 5);
+    }
 
     //...and draw each person
     people.forEach(person => {
@@ -249,15 +290,18 @@ function renderSimulation() {
     fill(255);
     noStroke();
     text(`${deltaTime.toFixed()} ms per frame`, 5, 15);
-    text(`${people.length} Schüler
+    text(
+`${people.length} Schüler
 ${Math.floor(windowWidth/nodeSize)}x${Math.floor(windowHeight/nodeSize)} Wegpunkte
-aktueller R-Wert: ${getR().toFixed(2)}
-------------------
+aktueller R-Wert: ${getR().toFixed(2)} (max.: ${getR(true)})
+------------------------------------------
 F - Graph
 C - Kreisdiagramm
 B - Experimentelles
+      Diagramm
 A - Einstellungen
 `,5, 35);
+
     strokeWeight(1);
     stroke(255);
     fill(255);

@@ -1,5 +1,6 @@
-///<reference path="../../../../.config/JetBrains/WebStorm2020.3/javascript/extLibs/global-types/node_modules/@types/p5/global.d.ts"/>
 ///<reference path="../Tutils.ts"/>
+
+//render fancy graph with lines like in exel
 function renderFancy() {
   background(60);
   noFill();
@@ -21,6 +22,7 @@ function renderFancy() {
   text(deltaTime, 10, 10)
 }
 
+//render accurate fancy graph
 function renderFancy2() {
   background(60);
   noFill();

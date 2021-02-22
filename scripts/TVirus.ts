@@ -1,4 +1,5 @@
 ///<reference path="../../../.config/JetBrains/WebStorm2020.3/javascript/extLibs/global-types/node_modules/@types/p5/global.d.ts"/>
+
 class Virus {
     rLetalitaet: number;
     pInfection: number;
@@ -33,22 +34,22 @@ class Virus {
   }
 
   isNotSimilarEnough(v: Virus){
-        let toleranceLetalitaet = 0.001;
-        let toleranceRekonvaleszenz = 0.001;
-        let toleranceIncubation = 0.001;
-        let toleranceLatenz = 0.001;
+        let toleranceLetalitaet = 0.50;
+        let toleranceRekonvaleszenz = 0.50;
+        let toleranceIncubation = 0.50;
+        let toleranceLatenz = 0.01;
         let toleranceSneezing = 0.50;
         let toleranceCoughing = 0.50;
         let toleranceSpontaniousEyeBleeding = 0.50;
 
         return (
-            1-min([this.rLetalitaet, v.rLetalitaet])/max([this.rLetalitaet, v.rLetalitaet]) > toleranceLetalitaet
-            || 1-min([this.tRekonvaleszenz, v.tRekonvaleszenz])/max([this.tRekonvaleszenz, v.tRekonvaleszenz]) > toleranceRekonvaleszenz
-            || 1-min([this.tIncubation, v.tIncubation])/max([this.tIncubation, v.tIncubation]) > toleranceIncubation
-            || 1-min([this.tLatenz, v.tLatenz])/max([this.tLatenz, v.tLatenz]) > toleranceLatenz
-            || 1-min([this.symptoms.COUGHING, v.symptoms.COUGHING])/max([this.symptoms.COUGHING, v.symptoms.COUGHING]) > toleranceCoughing
-            || 1-min([this.symptoms.SNEEZING, v.symptoms.SNEEZING])/max([this.symptoms.SNEEZING, v.symptoms.SNEEZING]) > toleranceSneezing
-            || 1-min([this.symptoms.SPONTANIOUS_EYE_BLEEDING, v.symptoms.SPONTANIOUS_EYE_BLEEDING])/max([this.symptoms.SPONTANIOUS_EYE_BLEEDING, v.symptoms.SPONTANIOUS_EYE_BLEEDING]) > toleranceSpontaniousEyeBleeding
+               1-(min([this.rLetalitaet, v.rLetalitaet])/max([this.rLetalitaet, v.rLetalitaet])) > toleranceLetalitaet
+            || 1-(min([this.tRekonvaleszenz, v.tRekonvaleszenz])/max([this.tRekonvaleszenz, v.tRekonvaleszenz])) > toleranceRekonvaleszenz
+            || 1-(min([this.tIncubation, v.tIncubation])/max([this.tIncubation, v.tIncubation])) > toleranceIncubation
+            || 1-(min([this.tLatenz, v.tLatenz])/max([this.tLatenz, v.tLatenz])) > toleranceLatenz
+            || 1-(min([this.symptoms.COUGHING, v.symptoms.COUGHING])/max([this.symptoms.COUGHING, v.symptoms.COUGHING])) > toleranceCoughing
+            || 1-(min([this.symptoms.SNEEZING, v.symptoms.SNEEZING])/max([this.symptoms.SNEEZING, v.symptoms.SNEEZING])) > toleranceSneezing
+            || 1-(min([this.symptoms.SPONTANIOUS_EYE_BLEEDING, v.symptoms.SPONTANIOUS_EYE_BLEEDING])/max([this.symptoms.SPONTANIOUS_EYE_BLEEDING, v.symptoms.SPONTANIOUS_EYE_BLEEDING])) > toleranceSpontaniousEyeBleeding
         );
   }
 

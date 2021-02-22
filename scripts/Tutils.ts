@@ -1,4 +1,3 @@
-///<reference path="../../../.config/JetBrains/WebStorm2020.3/javascript/extLibs/global-types/node_modules/@types/p5/global.d.ts"/>
 ///<reference path="Tsketch.ts"/>
 enum HEALTH {
     HEALTHY,
@@ -28,8 +27,31 @@ enum HEALTH {
 // ]
 let timeTables = []
 
+function areSettingsVisible() {
+    return canvas.style("display") == "none";
+}
+
 function hideSliders() {
     select("#sliderD").hide();
+}
+
+function turnSettingsOn(): void {
+    canvas.hide();
+    showSliders()
+}
+
+function turnSettingsOff(): void {
+    hideSliders();
+    canvas.show();
+}
+
+//switch the settingScreen automatically on or off
+function toggleSettingScreen() : void {
+    if (areSettingsVisible()) {
+        turnSettingsOff();
+    } else {
+        turnSettingsOn()
+    }
 }
 
 function showSliders() {
@@ -42,14 +64,19 @@ function updateSliderValues() {
 
     shortBreakDuration = <number>select("#sbreakd").value();
     BreakDuration = <number>select("#breakd").value();
-    Lessonduration = <number>select("#lessond").value();
+    lessonDuration = <number>select("#lessond").value();
     homeDuration = <number>select("#homed").value();
 
     // @ts-ignore
     mask = <boolean>select("#mask").checked();
     // @ts-ignore
-    ffp2 = <boolean>select("#ffp2").checked();
+    aerosols = <boolean>select("#aerosols").checked();
+    // @ts-ignore
+    oneWayMask = <boolean>select("#ffp2").checked();
     maskProtection = mask ? maskProtection = <number>select("#maskprotection").value()/100 : 0;
+    humidity = <number>select("#humidity").value()/100
+    // @ts-ignore
+    openWindows = <boolean>select("#freshAir").checked();
 
     // @ts-ignore
     stayAtHomeWhenSick = <boolean>select("#stayAtHomeWhenSick").checked();
@@ -159,12 +186,15 @@ enum VIEWS {
  }
 
 
- function getR(): number {
+ function getR(max?: boolean): number {
     let _r = 0;
+    let _m = 0;
     people.forEach(person => {
         _r += person.infectedPeople;
+        if (person.infectedPeople > _m) _m = person.infectedPeople;
     });
-    return (_r/(people.length - currentAnalData.HEALTHY - currentAnalData.SYMPTOMS - currentAnalData.INFECTED))
+    if (max) return _m;
+    return (_r/(people.length-currentAnalData.HEALTHY))
  }
 
 

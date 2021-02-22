@@ -7,7 +7,7 @@ let exit: PathFinderNode[]
 
 let shortBreakDuration = 10;
 let BreakDuration = 10;
-let Lessonduration = 10;
+let lessonDuration = 10;
 let homeDuration = 10;
 
 function initTimetables() {

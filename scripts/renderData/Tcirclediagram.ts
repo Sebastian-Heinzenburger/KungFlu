@@ -1,4 +1,3 @@
-///<reference path="../../../../.config/JetBrains/WebStorm2020.3/javascript/extLibs/global-types/node_modules/@types/p5/global.d.ts"/>
 ///<reference path="../Tsketch.ts"/>
 function renderCircle() {
   background(60);

@@ -27,20 +27,20 @@ var Virus = /** @class */ (function () {
         };
     }
     Virus.prototype.isNotSimilarEnough = function (v) {
-        var toleranceLetalitaet = 0.001;
-        var toleranceRekonvaleszenz = 0.001;
-        var toleranceIncubation = 0.001;
-        var toleranceLatenz = 0.001;
+        var toleranceLetalitaet = 0.50;
+        var toleranceRekonvaleszenz = 0.50;
+        var toleranceIncubation = 0.50;
+        var toleranceLatenz = 0.01;
         var toleranceSneezing = 0.50;
         var toleranceCoughing = 0.50;
         var toleranceSpontaniousEyeBleeding = 0.50;
-        return (1 - min([this.rLetalitaet, v.rLetalitaet]) / max([this.rLetalitaet, v.rLetalitaet]) > toleranceLetalitaet
-            || 1 - min([this.tRekonvaleszenz, v.tRekonvaleszenz]) / max([this.tRekonvaleszenz, v.tRekonvaleszenz]) > toleranceRekonvaleszenz
-            || 1 - min([this.tIncubation, v.tIncubation]) / max([this.tIncubation, v.tIncubation]) > toleranceIncubation
-            || 1 - min([this.tLatenz, v.tLatenz]) / max([this.tLatenz, v.tLatenz]) > toleranceLatenz
-            || 1 - min([this.symptoms.COUGHING, v.symptoms.COUGHING]) / max([this.symptoms.COUGHING, v.symptoms.COUGHING]) > toleranceCoughing
-            || 1 - min([this.symptoms.SNEEZING, v.symptoms.SNEEZING]) / max([this.symptoms.SNEEZING, v.symptoms.SNEEZING]) > toleranceSneezing
-            || 1 - min([this.symptoms.SPONTANIOUS_EYE_BLEEDING, v.symptoms.SPONTANIOUS_EYE_BLEEDING]) / max([this.symptoms.SPONTANIOUS_EYE_BLEEDING, v.symptoms.SPONTANIOUS_EYE_BLEEDING]) > toleranceSpontaniousEyeBleeding);
+        return (1 - (min([this.rLetalitaet, v.rLetalitaet]) / max([this.rLetalitaet, v.rLetalitaet])) > toleranceLetalitaet
+            || 1 - (min([this.tRekonvaleszenz, v.tRekonvaleszenz]) / max([this.tRekonvaleszenz, v.tRekonvaleszenz])) > toleranceRekonvaleszenz
+            || 1 - (min([this.tIncubation, v.tIncubation]) / max([this.tIncubation, v.tIncubation])) > toleranceIncubation
+            || 1 - (min([this.tLatenz, v.tLatenz]) / max([this.tLatenz, v.tLatenz])) > toleranceLatenz
+            || 1 - (min([this.symptoms.COUGHING, v.symptoms.COUGHING]) / max([this.symptoms.COUGHING, v.symptoms.COUGHING])) > toleranceCoughing
+            || 1 - (min([this.symptoms.SNEEZING, v.symptoms.SNEEZING]) / max([this.symptoms.SNEEZING, v.symptoms.SNEEZING])) > toleranceSneezing
+            || 1 - (min([this.symptoms.SPONTANIOUS_EYE_BLEEDING, v.symptoms.SPONTANIOUS_EYE_BLEEDING]) / max([this.symptoms.SPONTANIOUS_EYE_BLEEDING, v.symptoms.SPONTANIOUS_EYE_BLEEDING])) > toleranceSpontaniousEyeBleeding);
     };
     //return mutated version of the Virus
     Virus.prototype.get = function () {

@@ -1,4 +1,3 @@
-///<reference path="../../../.config/JetBrains/WebStorm2020.3/javascript/extLibs/global-types/node_modules/@types/p5/global.d.ts"/>
 ///<reference path="Tsketch.ts"/>
 var AStar = /** @class */ (function () {
     function AStar() {
@@ -28,24 +27,19 @@ var AStar = /** @class */ (function () {
     AStar.prototype.f = function (n) {
         return n.g + this.h(n);
     };
-    //
-    // randomEndNode(person) {
-    //   person.pathFinder.endNode = globalNodes[Math.floor(random(windowWidth)/nodeSize)][Math.floor(random(windowHeight)/nodeSize)];
-    //   while (!person.pathFinder.endNode.isGood) {
-    //     person.pathFinder.endNode = globalNodes[Math.floor(random(windowWidth)/nodeSize)][Math.floor(random(windowHeight)/nodeSize)];
-    //   }
-    // }
-    AStar.prototype.expandNode = function (n, ns) {
-        var _this = this;
-        //get all the neighbouring nodes
+    //get all the neighbouring nodes
+    AStar.prototype.getNeighbors = function (n, ns) {
         var neighbours = [];
         try {
             //top row
             if (n.y > 0) {
+                //left
                 if (n.x > 0 && ns[n.x][n.y - 1].isGood && ns[n.x - 1][n.y].isGood) {
                     neighbours.push(ns[n.x - 1][n.y - 1]);
                 }
+                //middle
                 neighbours.push(ns[n.x][n.y - 1]);
+                //right
                 if (n.x < ns.length - 1 && ns[n.x][n.y - 1].isGood && ns[n.x + 1][n.y].isGood) {
                     neighbours.push(ns[n.x + 1][n.y - 1]);
                 }
@@ -59,10 +53,13 @@ var AStar = /** @class */ (function () {
             }
             //lower row
             if (n.y < ns[0].length - 1) {
+                //left
                 if (n.x > 0 && ns[n.x][n.y + 1].isGood && ns[n.x - 1][n.y].isGood) {
                     neighbours.push(ns[n.x - 1][n.y + 1]);
                 }
+                //middle
                 neighbours.push(ns[n.x][n.y + 1]);
+                //right
                 if (n.x < ns.length - 1 && ns[n.x + 1][n.y].isGood && ns[n.x][n.y + 1].isGood) {
                     neighbours.push(ns[n.x + 1][n.y + 1]);
                 }
@@ -71,11 +68,19 @@ var AStar = /** @class */ (function () {
         catch (_a) {
             throw (TypeError);
         }
+        return neighbours;
+    };
+    AStar.prototype.expandNode = function (n, ns) {
+        var _this = this;
+        //get all the neighboring nodes
+        var neighbours = this.getNeighbors(n, ns);
+        //go through each neighbor
         neighbours.forEach(function (ne) {
             //if we hadn't already been there
             // + obstacle check
             // @ts-ignore
             if (!_this.closedList.includes(ne)) {
+                //if the node isn't an obstacle
                 if (ne.isGood) {
                     //estimate new g cost
                     var newG = n.g + dist(n.x, n.y, ne.x, ne.y);
@@ -98,9 +103,10 @@ var AStar = /** @class */ (function () {
         //stop if there is no endNode or startNode
         if (!this.startNode || !this.endNode)
             return false;
+        //stop if it makes no sense to search
         if (this.startNode === this.endNode || !this.endNode.isGood)
             return false;
-        //do housekeeping
+        //clean out lists
         this.openlist = [];
         this.closedList = [];
         _ns.forEach(function (_n) {
@@ -108,11 +114,13 @@ var AStar = /** @class */ (function () {
             _n.g = Number.MAX_SAFE_INTEGER * 0.99;
             _n.daddy = null;
         });
+        //we dont have to travel to were we already are. so the g-cost is 0
         this.startNode.g = 0;
         //first there is just the start in the openlist
         this.openlist.push(this.startNode);
         //while we have options
         while (this.openlist.length > 0) {
+            //look at the most promising node
             this.currentNode = this.getMin();
             //are we there yet?
             if (this.currentNode === this.endNode) {
@@ -135,7 +143,9 @@ var PathFinderNode = /** @class */ (function () {
         this.g = Number.MAX_SAFE_INTEGER * 0.99;
         this.isGood = true;
         this.daddy = null;
+        this.aerosol = 0;
     }
+    //depreciated
     PathFinderNode.prototype.copy = function () {
         var _n = new PathFinderNode(this.x, this.y);
         _n.g = this.g;

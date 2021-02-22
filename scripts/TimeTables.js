@@ -6,7 +6,7 @@ var greatBreak;
 var exit;
 var shortBreakDuration = 10;
 var BreakDuration = 10;
-var Lessonduration = 10;
+var lessonDuration = 10;
 var homeDuration = 10;
 function initTimetables() {
     tables = [

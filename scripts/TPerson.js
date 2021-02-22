@@ -1,4 +1,3 @@
-///<reference path="../../../.config/JetBrains/WebStorm2020.3/javascript/extLibs/global-types/node_modules/@types/p5/global.d.ts"/>
 ///<reference path="Tutils.ts"/>
 ///<reference path="TastarLib.ts"/>
 ///<reference path="TVirus.ts"/>
@@ -47,10 +46,33 @@ var Person = /** @class */ (function () {
                 break;
         }
     };
-    // hasSymptoms(): boolean {
-    //   if (!this.virus) return false;
-    //   return (this.localTimer < this.virus.tLatenz + ())
-    // }
+    Person.prototype.createAerosol = function () {
+        if (!aerosols)
+            return;
+        if (humidity < 0.4 && random(1) > 0.1)
+            return;
+        if (humidity > 0.4 && random(1) > 0.5)
+            return;
+        var n = {
+            x: floor(this.position.x / nodeSize),
+            y: floor(this.position.y / nodeSize),
+        };
+        var r = 4;
+        var s = 400;
+        for (var x = -r; x < r; x++) {
+            for (var y = -r; y < r; y++) {
+                try {
+                    var node = globalNodes[n.x + x][n.y + y];
+                    if (node.isGood) {
+                        node.aerosol += (s / (dist(n.x, n.y, n.x + x, n.y + y) + 1));
+                        node.infector = this;
+                    }
+                }
+                catch (_a) {
+                }
+            }
+        }
+    };
     Person.prototype.checkTime = function () {
         //wenn du nicht krank bist, lebe glücklich weiter
         if (this.state !== HEALTH.INFECTIOUS && this.state !== HEALTH.INFECTED && this.state !== HEALTH.SYMPTOMS)
@@ -65,6 +87,7 @@ var Person = /** @class */ (function () {
             for (var symptom in this.virus.symptoms) {
                 if (!mask && random(1) < this.virus.symptoms[symptom]) {
                     this.infectRadius = this.size * 4;
+                    this.createAerosol();
                 }
             }
         }
@@ -79,6 +102,7 @@ var Person = /** @class */ (function () {
             }
             else {
                 this.state = HEALTH.IMMUNE;
+                this.atHome = false;
             }
         }
         //check if Latenzzeit is over
@@ -90,6 +114,7 @@ var Person = /** @class */ (function () {
         }
     };
     Person.prototype.handleOthers = function () {
+        var _this_1 = this;
         var _this = this;
         if (_this.state === HEALTH.INFECTED)
             return;
@@ -98,13 +123,20 @@ var Person = /** @class */ (function () {
             people.forEach(function (person) {
                 //dont spontaneously self-infect
                 if (person !== _this) {
+                    //TRÖPCHENINFEKTION
                     //if in reach
                     if (dist(person.position.x, person.position.y, _this.position.x, _this.position.y) < _this.infectRadius) {
-                        //and not dead
+                        //and infectable
                         if (person.state === HEALTH.HEALTHY || person.state === HEALTH.IMMUNE) {
-                            if (random(1) < _this.virus.pInfection * (1 - maskProtection) * (ffp2 ? (1 - maskProtection) : 1)) {
-                                person.infectWith(_this.virus.get());
-                                _this.infectedPeople++;
+                            if (random(1) < _this.virus.pInfection * maskProtection * (oneWayMask ? (1 - maskProtection) : 1)) {
+                                if (person.state === HEALTH.IMMUNE && _this_1.virus.isNotSimilarEnough(person.virus)) {
+                                    person.infectWith(_this_1.virus.get());
+                                    _this_1.infectedPeople++;
+                                }
+                                else if (person.state === HEALTH.HEALTHY) {
+                                    person.infectWith(_this_1.virus.get());
+                                    _this_1.infectedPeople++;
+                                }
                             }
                         }
                     }
@@ -116,35 +148,43 @@ var Person = /** @class */ (function () {
         //dont move if ya dead
         if (this.state === HEALTH.DEAD)
             return;
-        //if its the first time, pick a random endnote TODO:
-        // if (!this.pathFinder.endNode) {
-        if (this.timeTableIndex !== 11) {
-            //if you haveee to go to schoooool again
-            this.pathFinder.endNode = this.getNextNode();
-            //and dont feel sick
-            this.atHome = (this.state === HEALTH.SYMPTOMS);
+        //if youre leaving home
+        if (getCurrentLessonIndex() === 0) {
+            //and feel sick
+            if (this.state === HEALTH.SYMPTOMS && stayAtHomeWhenSick) {
+                //then stay at home
+                this.pathFinder.endNode = timetables[this.myPersonalIndex % timetables.length][timetables[this.myPersonalIndex % timetables.length].length - 1][floor(this.myPersonalIndex / timetables.length)];
+                this.atHome = true;
+            }
+            else {
+                //and dont feel sick
+                //then you can continue
+                this.atHome = false;
+                this.pathFinder.endNode = this.getNextNode();
+            }
+            //except when youre not allowed to stay at home
             if (!stayAtHomeWhenSick)
                 this.atHome = false;
         }
-        // }
+        else if (!this.atHome) {
+            this.pathFinder.endNode = this.getNextNode();
+        }
         //refresh the startNode
         this.pathFinder.startNode = globalNodes[Math.floor(this.position.x / nodeSize)][Math.floor(this.position.y / nodeSize)];
-        //
-        // this.pathFinder.endNode = globalNodes[Math.floor(mouseX / nodeSize)][Math.floor(mouseY / nodeSize)];
-        //
         //falls man den pfad neuberechnen sollte
-        if (!this.pathFinder.nextN || ((this.position.x / nodeSize >= this.pathFinder.nextN.x - nodeSize * 0.5)
-            && (this.position.x / nodeSize <= this.pathFinder.nextN.x + nodeSize * 0.5)
-            &&
-                (this.position.y / nodeSize >= this.pathFinder.nextN.y - nodeSize * 0.5)
-            && (this.position.y / nodeSize <= this.pathFinder.nextN.y + nodeSize * 0.5)) ||
-            this.pathFinder.endNode !== this.pathFinder.lEndNode
-        //Math.floor(this.position.y / nodeSize) == this.pathFinder.startNode.y && this.pathFinder.startNode.x + nodeSize * 0.2 <= this.position.x / nodeSize <= this.pathFinder.startNode.x - nodeSize * 0.2
-        ) {
+        if (
+        //if the next node got irrelevant
+        !this.pathFinder.nextN
+            || ((this.position.x / nodeSize >= this.pathFinder.nextN.x - nodeSize * 0.5)
+                && (this.position.x / nodeSize <= this.pathFinder.nextN.x + nodeSize * 0.5)
+                && (this.position.y / nodeSize >= this.pathFinder.nextN.y - nodeSize * 0.5)
+                && (this.position.y / nodeSize <= this.pathFinder.nextN.y + nodeSize * 0.5))
+            //or the endNode changed
+            || this.pathFinder.endNode !== this.pathFinder.lEndNode) {
             this.pathFinder.lEndNode = this.pathFinder.endNode;
-            //berechne den Pfad
+            //get the path
             if (this.pathFinder.getPath(globalNodes)) {
-                //reconstructing the path:
+                //reconstructing the path in order to get the next node:
                 //the current node we are looking at
                 var n = this.pathFinder.endNode;
                 //the node before that
@@ -155,52 +195,38 @@ var Person = /** @class */ (function () {
                     n = n.daddy;
                 }
                 this.pathFinder.nextN = n;
-                //if theres noooo path:
             }
             else {
+                //if theres noooo path:
                 this.pathFinder.nextN = this.pathFinder.startNode;
             }
         }
         //if we didnt reached the goal yet
         if (this.pathFinder.startNode !== this.pathFinder.endNode) {
             //move in the direction of the center of the next node!!
+            //calculate direction
             this.velocity = createVector(((this.pathFinder.nextN.x + 0.5) * nodeSize) - this.position.x, ((this.pathFinder.nextN.y + 0.5) * nodeSize) - this.position.y);
+            //set the speed
             this.velocity.limit(this.velocity.mag());
             this.velocity.setMag((this.velocity.mag() / 200) * (deltaTime / Config.speed));
+            //dont walk out of screen
             if (this.position.x + this.velocity.x > 0 && this.position.x + this.velocity.x < windowWidth &&
                 this.position.y + this.velocity.y > 0 && this.position.y + this.velocity.y < windowHeight)
+                //update position
                 this.position.add(this.velocity);
         }
         else {
+            //if we arrived
             if (this.timeTableIndex === 11) {
                 this.atHome = true;
             }
-            this.pathFinder.endNode = this.getNextNode();
+        }
+        if (map(this.pathFinder.startNode.aerosol, 0, 400, 0, 1) > random(1)) {
+            this.infectWith(this.pathFinder.startNode.infector.virus.get());
         }
     };
     Person.prototype.getNextNode = function () {
-        // console.log("--------------------------")
-        var _t = [
-            Lessonduration,
-            shortBreakDuration,
-            Lessonduration,
-            shortBreakDuration,
-            Lessonduration,
-            BreakDuration,
-            shortBreakDuration,
-            Lessonduration,
-            shortBreakDuration,
-            Lessonduration,
-            Lessonduration,
-            homeDuration
-        ];
-        var tNow = 0;
-        var lessonsSince0 = 0;
-        while (tNow < frameCount) {
-            tNow += _t[lessonsSince0 % _t.length];
-            lessonsSince0++;
-        }
-        this.timeTableIndex = (lessonsSince0 - 1) % _t.length;
+        this.timeTableIndex = getCurrentLessonIndex();
         return timetables[this.myPersonalIndex % timetables.length][this.timeTableIndex][floor(this.myPersonalIndex / timetables.length)];
     };
     Person.prototype.infectWith = function (virus) {
@@ -220,7 +246,7 @@ var Person = /** @class */ (function () {
         var _m = createVector(mouseX - this.position.x, mouseY - this.position.y);
         _m.limit(60);
         var _h = _m.y > 0 ? 220 : -220;
-        var _w = _m.x > 0 ? 160 : -160;
+        var _w = _m.x > 0 ? 170 : -170;
         var _x = this.position.x + _m.x;
         var _y = this.position.y + _m.y;
         var _x_padding = 10;
@@ -234,7 +260,8 @@ var Person = /** @class */ (function () {
             strokeWeight(2);
             rect(_x, _y, _w, _h, 5);
             line(this.position.x, this.position.y, _x, _y);
-            noStroke();
+            stroke(c);
+            strokeWeight(1);
             c.setAlpha(this.showInfo);
             fill(c);
             text(this.getInfo(), _tx, _ty);
@@ -248,6 +275,7 @@ var Person = /** @class */ (function () {
         c.setAlpha(100);
         //draw ellipse
         fill(c);
+        stroke(c);
         ellipse(this.position.x, this.position.y, this.size * 2, this.size * 2);
         this.drawInfo(c);
         //if not dead
@@ -255,6 +283,7 @@ var Person = /** @class */ (function () {
         //draw infect radius
         c.setAlpha(90);
         fill(c);
+        stroke(c);
         ellipse(this.position.x, this.position.y, this.infectRadius, this.infectRadius);
         //draw image
         noFill();

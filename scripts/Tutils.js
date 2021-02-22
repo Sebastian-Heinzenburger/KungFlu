@@ -1,4 +1,3 @@
-///<reference path="../../../.config/JetBrains/WebStorm2020.3/javascript/extLibs/global-types/node_modules/@types/p5/global.d.ts"/>
 ///<reference path="Tsketch.ts"/>
 var HEALTH;
 (function (HEALTH) {
@@ -25,8 +24,28 @@ var HEALTH;
 //
 // ]
 var timeTables = [];
+function areSettingsVisible() {
+    return canvas.style("display") == "none";
+}
 function hideSliders() {
     select("#sliderD").hide();
+}
+function turnSettingsOn() {
+    canvas.hide();
+    showSliders();
+}
+function turnSettingsOff() {
+    hideSliders();
+    canvas.show();
+}
+//switch the settingScreen automatically on or off
+function toggleSettingScreen() {
+    if (areSettingsVisible()) {
+        turnSettingsOff();
+    }
+    else {
+        turnSettingsOn();
+    }
 }
 function showSliders() {
     select("#sliderD").show();
@@ -36,13 +55,18 @@ function updateSliderValues() {
     Config.fadeTime = select("#fadeoutSlider").value();
     shortBreakDuration = select("#sbreakd").value();
     BreakDuration = select("#breakd").value();
-    Lessonduration = select("#lessond").value();
+    lessonDuration = select("#lessond").value();
     homeDuration = select("#homed").value();
     // @ts-ignore
     mask = select("#mask").checked();
     // @ts-ignore
-    ffp2 = select("#ffp2").checked();
+    aerosols = select("#aerosols").checked();
+    // @ts-ignore
+    oneWayMask = select("#ffp2").checked();
     maskProtection = mask ? maskProtection = select("#maskprotection").value() / 100 : 0;
+    humidity = select("#humidity").value() / 100;
+    // @ts-ignore
+    openWindows = select("#freshAir").checked();
     // @ts-ignore
     stayAtHomeWhenSick = select("#stayAtHomeWhenSick").checked();
     while (people.length > select("#people").value()) {
@@ -132,12 +156,17 @@ function listCopy(_from) {
     }
     return _new;
 }
-function getR() {
+function getR(max) {
     var _r = 0;
+    var _m = 0;
     people.forEach(function (person) {
         _r += person.infectedPeople;
+        if (person.infectedPeople > _m)
+            _m = person.infectedPeople;
     });
-    return (_r / (people.length - currentAnalData.HEALTHY - currentAnalData.INFECTED));
+    if (max)
+        return _m;
+    return (_r / (people.length - currentAnalData.HEALTHY));
 }
 // function drawCurve(_healthtype) {
 //   beginShape();

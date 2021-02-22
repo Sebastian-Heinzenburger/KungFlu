@@ -1,13 +1,20 @@
-///<reference path="../../../.config/JetBrains/WebStorm2020.3/javascript/extLibs/global-types/node_modules/@types/p5/global.d.ts"/>
 ///<reference path="Tsketch.ts"/>
 class AStar {
 
   //our goal and end
-  endNode;
-  startNode;
+  endNode: PathFinderNode;
+  startNode: PathFinderNode;
+
+  //the note we currently examen
   nodes: PathFinderNode[];
+
+  //the last end node
   lEndNode: PathFinderNode;
+
+  //the first node from the startpoint
   nextN: PathFinderNode;
+
+  //keep track of the node states
   openlist: PathFinderNode[];
   closedList: PathFinderNode[];
   currentNode: PathFinderNode;
@@ -18,7 +25,6 @@ class AStar {
     //nodes that we already dislike
     this.closedList = [];
     //the note we currently examen
-
     this.nodes = [];
   }
 
@@ -41,26 +47,25 @@ class AStar {
   f(n) {
     return n.g + this.h(n);
   }
-  //
-  // randomEndNode(person) {
-  //   person.pathFinder.endNode = globalNodes[Math.floor(random(windowWidth)/nodeSize)][Math.floor(random(windowHeight)/nodeSize)];
-  //   while (!person.pathFinder.endNode.isGood) {
-  //     person.pathFinder.endNode = globalNodes[Math.floor(random(windowWidth)/nodeSize)][Math.floor(random(windowHeight)/nodeSize)];
-  //   }
-  // }
 
-  expandNode(n, ns) {
-
-    //get all the neighbouring nodes
+  //get all the neighbouring nodes
+  getNeighbors(n, ns) {
     let neighbours = [];
 
     try {
-
       //top row
       if (n.y > 0) {
-         if (n.x > 0 && ns[n.x][n.y-1].isGood && ns[n.x-1][n.y].isGood) { neighbours.push(ns[n.x-1][n.y-1]); }
+
+        //left
+        if (n.x > 0 && ns[n.x][n.y-1].isGood && ns[n.x-1][n.y].isGood)
+        { neighbours.push(ns[n.x-1][n.y-1]); }
+
+        //middle
         neighbours.push(ns[n.x][n.y-1]);
-        if (n.x < ns.length-1 && ns[n.x][n.y-1].isGood && ns[n.x+1][n.y].isGood) { neighbours.push(ns[n.x+1][n.y-1]); }
+
+        //right
+        if (n.x < ns.length-1 && ns[n.x][n.y-1].isGood && ns[n.x+1][n.y].isGood)
+        { neighbours.push(ns[n.x+1][n.y-1]); }
       }
 
       //middle row
@@ -69,20 +74,37 @@ class AStar {
 
       //lower row
       if (n.y < ns[0].length-1) {
-        if (n.x > 0 && ns[n.x][n.y+1].isGood && ns[n.x-1][n.y].isGood) { neighbours.push(ns[n.x-1][n.y+1]); }
+
+        //left
+        if (n.x > 0 && ns[n.x][n.y+1].isGood && ns[n.x-1][n.y].isGood)
+        { neighbours.push(ns[n.x-1][n.y+1]); }
+
+        //middle
         neighbours.push(ns[n.x][n.y+1]);
-        if (n.x < ns.length-1 && ns[n.x+1][n.y].isGood && ns[n.x][n.y+1].isGood) { neighbours.push(ns[n.x+1][n.y+1]); }
+
+        //right
+        if (n.x < ns.length-1 && ns[n.x+1][n.y].isGood && ns[n.x][n.y+1].isGood)
+        { neighbours.push(ns[n.x+1][n.y+1]); }
       }
     } catch {
       throw(TypeError);
     }
 
+    return neighbours;
+  }
 
+  expandNode(n, ns) {
+
+    //get all the neighboring nodes
+    let neighbours = this.getNeighbors(n, ns);
+
+    //go through each neighbor
     neighbours.forEach(ne => {
       //if we hadn't already been there
       // + obstacle check
       // @ts-ignore
       if (!this.closedList.includes(ne)) {
+        //if the node isn't an obstacle
         if (ne.isGood) {
           //estimate new g cost
           let newG = n.g + dist(n.x, n.y, ne.x, ne.y);
@@ -105,13 +127,13 @@ class AStar {
   //return true if path is possible
   getPath(_ns) {
 
-
     //stop if there is no endNode or startNode
     if (!this.startNode || !this.endNode) return false;
 
+    //stop if it makes no sense to search
     if (this.startNode === this.endNode || !this.endNode.isGood) return false;
 
-    //do housekeeping
+    //clean out lists
     this.openlist = [];
     this.closedList = [];
 
@@ -121,6 +143,7 @@ class AStar {
       _n.daddy = null;
     });
 
+    //we dont have to travel to were we already are. so the g-cost is 0
     this.startNode.g = 0;
 
     //first there is just the start in the openlist
@@ -128,13 +151,18 @@ class AStar {
 
     //while we have options
     while (this.openlist.length > 0) {
+
+      //look at the most promising node
       this.currentNode = this.getMin();
+
       //are we there yet?
       if (this.currentNode === this.endNode){
         return true;
       }
+
       //nope? then were done with you
       this.closedList.push(this.currentNode);
+
       //look for someone hotter
       this.expandNode(this.currentNode, _ns);
     }
@@ -151,6 +179,8 @@ class PathFinderNode {
   g: number;
   isGood: boolean;
   daddy: PathFinderNode;
+  aerosol: number;
+  infector: Person;
 
   constructor(_x, _y) {
     this.x = _x;
@@ -159,8 +189,10 @@ class PathFinderNode {
     this.g = Number.MAX_SAFE_INTEGER*0.99;
     this.isGood = true;
     this.daddy = null;
+    this.aerosol = 0;
   }
 
+  //depreciated
   copy() : PathFinderNode{
     let _n = new PathFinderNode(this.x, this.y);
     _n.g = this.g;
